@@ -20,11 +20,25 @@ If you have any questions or feedback, feel free to [![Join the chat at https://
 
 ## Status
 
-The App is currently functional, we're still trying make it even better.
+HeliPort has been upgraded to **Version 3.0**, providing a state-of-the-art premium experience for Intel-based Macs. The app requires **macOS 13.0 (Ventura)** or newer and features a completely redesigned, high-fidelity user interface.
 
-### To-Do's
+### 🌟 V3.0 Premium Features
+- **💎 Glassmorphism Dashboard**: A stunning new real-time dashboard featuring glassmorphic effects, subtle gradients, and a refined typography system.
+- **📊 Advanced Telemetry**: Real-time signal strength history with high-frequency sampling (30 data points) and smoothed interpolation.
+- **🔧 Technical Deep-Dive**: The dashboard now always displays critical technical metrics including PHY Mode, Channel/Bandwidth, BSSID, and Noise levels.
+- **⚡️ Performance Optimized**: Rewritten UI components using modern SwiftUI patterns for minimal CPU impact while providing rich animations.
+- **🪄 macOS Native**: Seamlessly integrated with the macOS menu bar, supporting all accessibility features and system-wide themes.
 
-Visit [Projects](https://github.com/OpenIntelWireless/HeliPort/projects) for more information
+### 🏁 Development Status
+
+- [x] Redesign Dashboard with V3 Glassmorphism UI
+- [x] Implement always-available technical telemetry (Noise, PHY, Channel)
+- [x] Enhance Signal Strength Charting (30 data points)
+- [x] Update project version to 3.0.0
+- [x] Optimized Intel-only (x86_64) Architecture
+
+
+Visit [Projects](https://github.com/OpenIntelWireless/HeliPort/projects) for more information.
 
 ## Issues
 
@@ -60,5 +74,6 @@ We desperately need contributors to help us improve this project, any help will 
 - [@igorkulman](https://github.com/igorkulman) for code refactoring, password management and more
 - [@zxystd](https://github.com/zxystd) for writing [itlwm](https://github.com/OpenIntelWireless/itlwm) and APIs
 - [Everyone](https://github.com/OpenIntelWireless/HeliPort/pulls?q=is%3Apr+label%3Adocumentation+is%3Aclosed) who contributed to localization files
-- Legacy WiFi icons are from <https://icons8.com/>
-- Modern WiFi icons are from <https://github.com/framework7io/framework7-icons> (MIT License)
+- Primary UI icons use Apple's **SF Symbols** (Native macOS 13+ interface)
+- Legacy WiFi icons are from <https://icons8.com/> (No longer used by default)
+- Modern WiFi icons are from <https://github.com/framework7io/framework7-icons> (MIT License) (No longer used by default)

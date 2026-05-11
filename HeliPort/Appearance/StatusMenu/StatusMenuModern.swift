@@ -1,32 +1,26 @@
-//
-//  StatusMenuModern.swift
-//  HeliPort
-//
-//  Created by Bat.bat on 23/6/2024.
-//  Copyright © 2024 OpenIntelWireless. All rights reserved.
-//
-
-/*
- * This program and the accompanying materials are licensed and made available
- * under the terms and conditions of the The 3-Clause BSD License
- * which accompanies this distribution. The full text of the license may be found at
- * https://opensource.org/licenses/BSD-3-Clause
- */
-
 import Cocoa
+import SwiftUI
 
 @available(macOS 11, *)
 final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
+    // - MARK: SwiftUI State
+    private var isWiFiOn: Bool = true {
+        didSet {
+            _ = isWiFiOn ? power_on() : power_off()
+        }
+    }
+
     // - MARK: Menu items
 
     private lazy var statusItem: NSMenuItem = {
-        let item = HPMenuItem()
-        let view = StateSwitchMenuItemView(title: .Modern.wifi) { sender in
-            _ = sender.state == .on ? power_on() : power_off()
+        let binding = Binding(
+            get: { self.isNetworkCardEnabled },
+            set: { self.isWiFiOn = $0 }
+        )
+        return ModernToggleMenuItem(title: .Modern.wifi, isOn: binding) { newValue in
+             // power state is handled by binding
         }
-        item.view = view
-        return item
     }()
 
     private let knownSectionItem: NSMenuItem = {
@@ -110,13 +104,11 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
     override var isNetworkCardAvailable: Bool {
         willSet(newState) {
             super.isNetworkCardAvailable = newState
-            if !newState { (statusItem.view as? StateSwitchMenuItemView)?.isEnabled = false }
         }
     }
 
     override var isNetworkCardEnabled: Bool {
         willSet(newState) {
-            (statusItem.view as? StateSwitchMenuItemView)?.state = newState
             super.isNetworkCardEnabled = newState
         }
     }
@@ -128,7 +120,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
     override init() {
         super.init()
-        minimumWidth = 300
+        minimumWidth = 320
     }
 
     required init(coder: NSCoder) {
@@ -154,7 +146,8 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         addItem(.separator())
         addItem(knownSectionItem)
 
-        _ = addNetworkItem(currentNetworkItem)
+        // Current Network Item will be added dynamically by setCurrentNetworkItem
+        addItem(currentNetworkItem)
 
         stationInfoItems.forEach {
             $0.view = KeyValueMenuItemView(key: $0.title, inset: .staInfo)
@@ -224,7 +217,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
     func toggleWIFI() {
         DispatchQueue.main.async {
-            (self.statusItem.view as? StateSwitchMenuItemView)?.toggle()
+            self.isWiFiOn.toggle()
         }
     }
 
@@ -261,22 +254,50 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
                                  insertAt: Int? = nil,
                                  hidden: Bool = false,
                                  networkInfo: NetworkInfo = NetworkInfo(ssid: "placeholder")) -> NSMenuItem {
-        item.view = WifiMenuItemViewModern(networkInfo: networkInfo)
-        return super.addNetworkItem(item, insertAt: insertAt, hidden: hidden, networkInfo: networkInfo)
+        
+        let newItem = ModernNetworkMenuItem(
+            ssid: networkInfo.ssid,
+            signalStrength: Int(networkInfo.rssi),
+            isConnected: false,
+            isSecure: networkInfo.auth.security != ITL80211_SECURITY_NONE
+        ) {
+            NetworkManager.connect(networkInfo: networkInfo, saveNetwork: true)
+            self.cancelTracking()
+        }
+        
+        return super.addNetworkItem(newItem, insertAt: insertAt, hidden: hidden, networkInfo: networkInfo)
     }
 
     override func setCurrentNetworkItem(with info: StatusMenuBase.StationInfo) {
-        // connected -> disconnected
+        // Handle connected -> disconnected state
         if !currentNetworkItem.isHidden && !info.isNetworkConnected {
             for index in self.headerLength ..<
                     min(self.items.count,
-                        self.headerLength + self.knownNetworkItemList.count)
-            where self.items[index].view is WifiMenuItemView {
+                        self.headerLength + self.knownNetworkItemList.count) {
                 self.items[index].isHidden = false
                 self.items[index].isEnabled = true
             }
         }
 
+        isNetworkConnected = info.isNetworkConnected
+        currentNetworkItem.isHidden = !isNetworkConnected
+        
+        if isNetworkConnected, let ssid = info.ssid {
+            let dashboard = ModernDashboardMenuItem(
+                ssid: ssid,
+                ipAddress: info.ipAddr,
+                router: info.routerAddr,
+                signal: info.rssiValue,
+                noise: Int(info.noise.replacingOccurrences(of: " dBm", with: "")) ?? 0,
+                txRate: info.txRate,
+                channel: info.channel,
+                phyMode: info.phyMode,
+                bssid: info.bssid
+            )
+            currentNetworkItem.view = dashboard.view
+        }
+        
         super.setCurrentNetworkItem(with: info)
     }
 }
+

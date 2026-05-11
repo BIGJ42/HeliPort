@@ -107,6 +107,14 @@ class StatusBarIcon {
         return icons.getRssiImage(rssi)
     }
 
+    func updateStatusText(_ text: String?) {
+        DispatchQueue.main.async {
+            self.statusBar.button?.title = text ?? ""
+            // Ensure image and text have appropriate spacing
+            self.statusBar.button?.imagePosition = (text == nil || text?.isEmpty == true) ? .imageOnly : .imageLeft
+        }
+    }
+
     @objc private func tick() {
         DispatchQueue.main.async {
             if let transition = self.icons.transition {

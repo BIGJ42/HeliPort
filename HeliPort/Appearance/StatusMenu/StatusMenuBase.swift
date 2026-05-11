@@ -388,6 +388,12 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
             DispatchQueue.main.async {
                 self.setCurrentNetworkItem(with: info)
                 self.setStationItems(with: info)
+
+                if UserDefaults.standard.bool(forKey: .DefaultsKey.showBitrateInMenuBar) {
+                    StatusBarIcon.shared().updateStatusText(info.txRate)
+                } else {
+                    StatusBarIcon.shared().updateStatusText(nil)
+                }
             }
         }
     }
@@ -404,8 +410,6 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
         infoOut.isNetworkConnected = true
         infoOut.ssid = String(ssid: infoIn.ssid)
         infoOut.rssiValue = Int(infoIn.rssi)
-
-        guard showAllOptions else { return infoOut }
 
         var platformInfo = platform_info_t()
         if get_platform_info(&platformInfo) {

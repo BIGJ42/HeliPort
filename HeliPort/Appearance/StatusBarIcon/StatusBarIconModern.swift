@@ -22,23 +22,20 @@ class StatusBarIconModern: StatusBarIconProvider {
         transition.duration = 0.2
         return transition
     }
-    var off: NSImage { return #imageLiteral(resourceName: "ModernStateOff") }
-    var connected: NSImage { return #imageLiteral(resourceName: "ModernStateOn") }
-    var disconnected: NSImage { return #imageLiteral(resourceName: "ModernStateDisconnected") }
-    var warning: NSImage { return #imageLiteral(resourceName: "ModernStateWarning") }
+    var off: NSImage { return NSImage(systemSymbolName: "wifi.slash", accessibilityDescription: "WiFi Off")! }
+    var connected: NSImage { return NSImage(systemSymbolName: "wifi", accessibilityDescription: "WiFi On")! }
+    var disconnected: NSImage { return NSImage(systemSymbolName: "wifi", accessibilityDescription: "WiFi Disconnected")! }
+    var warning: NSImage { return NSImage(systemSymbolName: "wifi.exclamationmark", accessibilityDescription: "WiFi Warning")! }
     var scanning: [NSImage] {
         return [
-            #imageLiteral(resourceName: "ModernStateScanning1"),
-            #imageLiteral(resourceName: "ModernStateScanning2"),
-            #imageLiteral(resourceName: "ModernStateScanning3")
+            NSImage(systemSymbolName: "wifi", accessibilityDescription: "Scanning")!,
+            NSImage(systemSymbolName: "dot.radiowaves.left.and.right", accessibilityDescription: "Scanning")!
         ]
     }
 
     func getRssiImage(_ RSSI: Int16) -> NSImage? {
-        switch RSSI {
-        case ..<(-90): return #imageLiteral(resourceName: "ModernSignalStrengthPoor")
-        case ..<(-70): return #imageLiteral(resourceName: "ModernSignalStrengthFair")
-        default: return #imageLiteral(resourceName: "ModernSignalStrengthGood")
-        }
+        // Map RSSI (-100 to -30) to a 0.0-1.0 scale for the native 'wifi' symbol variable value
+        let normalized = Double(max(min(RSSI + 100, 70), 0)) / 70.0
+        return NSImage(systemSymbolName: "wifi", variableValue: normalized, accessibilityDescription: "Signal Strength")
     }
 }

@@ -24,28 +24,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
-        let legacyUIEnabled = {
-            if #unavailable(macOS 11) {
-                return true
-            }
-            return UserDefaults.standard.bool(forKey: .DefaultsKey.legacyUI)
-        }()
-
-        Log.debug("UI appearance: \(legacyUIEnabled ? "legacy" : "modern")")
-
-        let iconProvider: StatusBarIconProvider = {
-            if #available(macOS 11, *), !legacyUIEnabled {
-                return StatusBarIconModern()
-            }
-            return StatusBarIconLegacy()
-        }()
+        let iconProvider = StatusBarIconModern()
         _ = StatusBarIcon.shared(statusBar: statusBar, icons: iconProvider)
 
-        if #available(macOS 11, *), !legacyUIEnabled {
-            statusBar.menu = StatusMenuModern()
-        } else {
-            statusBar.menu = StatusMenuLegacy()
-        }
+        statusBar.menu = StatusMenuModern()
     }
 
     private var drv_info = ioctl_driver_info()

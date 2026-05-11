@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "    BSSID: " : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2608,6 +2611,12 @@
         }
       }
     },
+    "Connected" : {
+
+    },
+    "Connected • Stable" : {
+
+    },
     "Could not create zip file for generated logs." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3609,6 +3618,9 @@
         }
       }
     },
+    "Enter the password for this network." : {
+
+    },
     "Error occurred while generating bug report." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3934,6 +3946,9 @@
           }
         }
       }
+    },
+    "Get Wi-Fi Status" : {
+
     },
     "HeliPort API Version: " : {
       "extractionState" : "manual",
@@ -4635,6 +4650,9 @@
         }
       }
     },
+    "Join \"%@\"" : {
+
+    },
     "Join Other Network..." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4928,6 +4946,9 @@
           }
         }
       }
+    },
+    "Mbps" : {
+
     },
     "Network Name" : {
       "extractionState" : "manual",
@@ -6691,6 +6712,9 @@
         }
       }
     },
+    "Required" : {
+
+    },
     "Restart" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6707,6 +6731,9 @@
           }
         }
       }
+    },
+    "Returns the current connection status and network name." : {
+
     },
     "Saved Networks:" : {
       "extractionState" : "manual",
@@ -7124,6 +7151,12 @@
         }
       }
     },
+    "Signal" : {
+
+    },
+    "SIGNAL STRENGTH" : {
+
+    },
     "Switching appearance requires a restart of the application to take effect." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7169,6 +7202,9 @@
           }
         }
       }
+    },
+    "Time" : {
+
     },
     "Turn Wi-Fi Off" : {
       "extractionState" : "manual",

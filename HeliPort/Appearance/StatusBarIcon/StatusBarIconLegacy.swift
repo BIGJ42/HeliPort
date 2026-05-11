@@ -16,26 +16,25 @@
 import Cocoa
 
 class StatusBarIconLegacy: StatusBarIconProvider {
-    var transition: CATransition? { return nil }
-    var off: NSImage { return #imageLiteral(resourceName: "LegacyStateOff") }
-    var connected: NSImage { return #imageLiteral(resourceName: "LegacyStateOn") }
-    var disconnected: NSImage { return #imageLiteral(resourceName: "LegacyStateDisconnected") }
-    var warning: NSImage { return #imageLiteral(resourceName: "LegacyStateWarning") }
+    var transition: CATransition? {
+        let transition = CATransition()
+        transition.type = .fade
+        transition.duration = 0.2
+        return transition
+    }
+    var off: NSImage { return NSImage(systemSymbolName: "wifi.slash", accessibilityDescription: "WiFi Off")! }
+    var connected: NSImage { return NSImage(systemSymbolName: "wifi", accessibilityDescription: "WiFi On")! }
+    var disconnected: NSImage { return NSImage(systemSymbolName: "wifi", accessibilityDescription: "WiFi Disconnected")! }
+    var warning: NSImage { return NSImage(systemSymbolName: "wifi.exclamationmark", accessibilityDescription: "WiFi Warning")! }
     var scanning: [NSImage] {
         return [
-            #imageLiteral(resourceName: "LegacyStateScanning1"),
-            #imageLiteral(resourceName: "LegacyStateScanning2"),
-            #imageLiteral(resourceName: "LegacyStateScanning3"),
-            #imageLiteral(resourceName: "LegacyStateScanning4")
+            NSImage(systemSymbolName: "wifi", accessibilityDescription: "Scanning")!,
+            NSImage(systemSymbolName: "dot.radiowaves.left.and.right", accessibilityDescription: "Scanning")!
         ]
     }
 
     func getRssiImage(_ RSSI: Int16) -> NSImage? {
-        switch RSSI {
-        case ..<(-100): return #imageLiteral(resourceName: "LegacySignalStrengthPoor")
-        case ..<(-80): return #imageLiteral(resourceName: "LegacySignalStrengthFair")
-        case ..<(-60): return #imageLiteral(resourceName: "LegacySignalStrengthGood")
-        default: return #imageLiteral(resourceName: "LegacySignalStrengthExcellent")
-        }
+        let normalized = Double(max(min(RSSI + 100, 70), 0)) / 70.0
+        return NSImage(systemSymbolName: "wifi", variableValue: normalized, accessibilityDescription: "Signal Strength")
     }
 }

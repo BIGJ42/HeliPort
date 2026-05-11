@@ -42,27 +42,27 @@ class PrefsGeneralView: NSView {
         return checkbox
     }()
 
-    let appearanceLabel: NSTextField = {
-        let view = NSTextField(labelWithString: .appearance)
-        view.alignment = .right
-        return view
-    }()
-
-    lazy var legacyUICheckbox: NSButton = {
-        let checkbox = NSButton(checkboxWithTitle: .useLegacyUI,
+    lazy var bitrateCheckbox: NSButton = {
+        let checkbox = NSButton(checkboxWithTitle: .showBitrate,
                                 target: self,
-                                action: #selector(self.checkboxChanged(_:)))
-        checkbox.identifier = .legacyUIId
-
-        if #available(macOS 11, *) {
-            checkbox.state = UserDefaults.standard.bool(forKey: .DefaultsKey.legacyUI) ? .on : .off
-        } else {
-            checkbox.state = .on
-            checkbox.isEnabled = false
-        }
-
+                                action: #selector(checkboxChanged(_:)))
+        checkbox.identifier = .bitrateId
+        checkbox.state = UserDefaults.standard.bool(forKey: .DefaultsKey.showBitrateInMenuBar) ? .on : .off
         return checkbox
     }()
+
+    lazy var signalPercentageCheckbox: NSButton = {
+        let checkbox = NSButton(checkboxWithTitle: .showSignalPercentage,
+                                target: self,
+                                action: #selector(checkboxChanged(_:)))
+        checkbox.identifier = .signalPercentageId
+        checkbox.state = UserDefaults.standard.bool(forKey: .DefaultsKey.showSignalAsPercentage) ? .on : .off
+        return checkbox
+    }()
+
+
+
+
 
     let gridView: NSGridView = {
         let view = NSGridView()
@@ -79,8 +79,11 @@ class PrefsGeneralView: NSView {
 
         gridView.addRow(with: [updatesLabel])
         gridView.addColumn(with: [autoUpdateCheckbox, autoDownloadCheckbox])
-        let appearanceRow = gridView.addRow(with: [appearanceLabel, legacyUICheckbox])
-        appearanceRow.topPadding = 5
+        
+        let extrasLabel = NSTextField(labelWithString: "Extras:")
+        extrasLabel.alignment = .right
+        gridView.addRow(with: [extrasLabel, bitrateCheckbox])
+        gridView.addRow(with: [NSView(), signalPercentageCheckbox])
 
         addSubview(gridView)
         setupConstraints()
@@ -111,17 +114,12 @@ extension PrefsGeneralView {
             UpdateManager.sharedUpdater.automaticallyChecksForUpdates = sender.state == .on
         case .autoDownloadId:
             UpdateManager.sharedUpdater.automaticallyDownloadsUpdates = sender.state == .on
-        case .legacyUIId:
-            if #available(macOS 11, *) {
-                UserDefaults.standard.set(sender.state == .on, forKey: .DefaultsKey.legacyUI)
-                let alert = CriticalAlert(message: .heliportRestart,
-                                          informativeText: .restartInfoText,
-                                          options: [.restart, .later])
+        case .bitrateId:
+            UserDefaults.standard.set(sender.state == .on, forKey: .DefaultsKey.showBitrateInMenuBar)
+            // Notify StatusBarIcon to update immediately if possible
+        case .signalPercentageId:
+            UserDefaults.standard.set(sender.state == .on, forKey: .DefaultsKey.showSignalAsPercentage)
 
-                if alert.show() == .alertFirstButtonReturn {
-                    NSApp.restartApp()
-                }
-            }
         default:
             break
         }
@@ -131,21 +129,17 @@ extension PrefsGeneralView {
 private extension NSUserInterfaceItemIdentifier {
     static let autoUpdateId = NSUserInterfaceItemIdentifier(rawValue: "AutoUpdateCheckbox")
     static let autoDownloadId = NSUserInterfaceItemIdentifier(rawValue: "AutoDownloadCheckbox")
+    static let bitrateId = NSUserInterfaceItemIdentifier(rawValue: "BitrateCheckbox")
+    static let signalPercentageId = NSUserInterfaceItemIdentifier(rawValue: "SignalPercentageCheckbox")
 
-    static let legacyUIId = NSUserInterfaceItemIdentifier(rawValue: "legacyUICheckbox")
+
 }
 
 private extension String {
     static let startup = NSLocalizedString("Updates:")
     static let autoCheckUpdate = NSLocalizedString("Automatically check for updates.")
     static let autoDownload = NSLocalizedString("Automatically download new updates.")
-
-    static let appearance = NSLocalizedString("Appearance:")
-    static let useLegacyUI = NSLocalizedString("Use Legacy UI")
-
-    static let heliportRestart = NSLocalizedString("HeliPort Restart Required")
-    static let restartInfoText =
-        NSLocalizedString("Switching appearance requires a restart of the application to take effect.")
-    static let restart = NSLocalizedString("Restart")
-    static let later = NSLocalizedString("Later")
+    
+    static let showBitrate = NSLocalizedString("Show live bitrate in menu bar")
+    static let showSignalPercentage = NSLocalizedString("Show signal as percentage")
 }
