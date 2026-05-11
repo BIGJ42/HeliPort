@@ -7,27 +7,48 @@ struct SignalData: Identifiable {
     let value: Int
 }
 
+class NetworkDetailsViewModel: ObservableObject {
+    @Published var ssid: String = ""
+    @Published var ipAddress: String = ""
+    @Published var router: String = ""
+    @Published var signal: Int = 0
+    @Published var noise: Int = 0
+    @Published var txRate: String = ""
+    @Published var channel: String = ""
+    @Published var phyMode: String = ""
+    @Published var bssid: String = ""
+    @Published var signalHistory: [SignalData] = (0..<30).map { i in
+        SignalData(time: Date().addingTimeInterval(Double(-i * 2)), value: Int.random(in: -70...(-60)))
+    }
+    
+    func update(with info: StatusMenuBase.StationInfo) {
+        self.ssid = info.ssid ?? ""
+        self.ipAddress = info.ipAddr
+        self.router = info.routerAddr
+        self.signal = info.rssiValue
+        self.noise = Int(info.noise.replacingOccurrences(of: " dBm", with: "")) ?? 0
+        self.txRate = info.txRate
+        self.channel = info.channel
+        self.phyMode = info.phyMode
+        self.bssid = info.bssid
+        
+        let newData = SignalData(time: Date(), value: info.rssiValue)
+        signalHistory.insert(newData, at: 0)
+        if signalHistory.count > 30 {
+            signalHistory.removeLast()
+        }
+    }
+}
+
 struct NetworkDetailsDashboard: View {
-    let ssid: String
-    let ipAddress: String
-    let router: String
-    let signal: Int
-    let noise: Int
-    let txRate: String
-    let channel: String
-    let phyMode: String
-    let bssid: String
+    @ObservedObject var viewModel: NetworkDetailsViewModel
     
     private var signalDisplay: String {
         if UserDefaults.standard.bool(forKey: String.DefaultsKey.showSignalAsPercentage) {
-            let percentage = max(min(signal + 100, 70), 0) * 100 / 70
+            let percentage = max(min(viewModel.signal + 100, 70), 0) * 100 / 70
             return "\(percentage)%"
         }
-        return "\(signal) dBm"
-    }
-    
-    @State private var signalHistory: [SignalData] = (0..<30).map { i in
-        SignalData(time: Date().addingTimeInterval(Double(-i * 2)), value: Int.random(in: -70...(-40)))
+        return "\(viewModel.signal) dBm"
     }
     
     var body: some View {
@@ -46,7 +67,7 @@ struct NetworkDetailsDashboard: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(ssid)
+                    Text(viewModel.ssid)
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                     
                     HStack(spacing: 4) {
@@ -63,7 +84,7 @@ struct NetworkDetailsDashboard: View {
                 
                 // Real-time Rate Badge
                 VStack(alignment: .trailing, spacing: 0) {
-                    Text(txRate.replacingOccurrences(of: " Mbps", with: ""))
+                    Text(viewModel.txRate.replacingOccurrences(of: " Mbps", with: ""))
                         .font(.system(size: 20, weight: .bold, design: .monospaced))
                     Text("Mbps")
                         .font(.system(size: 8, weight: .black))
@@ -89,7 +110,7 @@ struct NetworkDetailsDashboard: View {
                 }
                 
                 Chart {
-                    ForEach(signalHistory) { data in
+                    ForEach(viewModel.signalHistory) { data in
                         AreaMark(
                             x: .value("Time", data.time),
                             y: .value("Signal", data.value)
@@ -115,7 +136,7 @@ struct NetworkDetailsDashboard: View {
                 .chartYScale(domain: -90...(-30))
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
-                .frame(height: 50)
+                .frame(height: 40)
             }
             .padding(.bottom, 16)
             
@@ -125,20 +146,20 @@ struct NetworkDetailsDashboard: View {
             // Technical Details Grid
             Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 12) {
                 GridRow {
-                    DetailItem(label: "IP Address", value: ipAddress)
-                    DetailItem(label: "Router", value: router)
+                    DetailItem(label: "IP Address", value: viewModel.ipAddress)
+                    DetailItem(label: "Router", value: viewModel.router)
                 }
                 GridRow {
-                    DetailItem(label: "Channel", value: channel)
-                    DetailItem(label: "PHY Mode", value: phyMode)
+                    DetailItem(label: "Channel", value: viewModel.channel)
+                    DetailItem(label: "PHY Mode", value: viewModel.phyMode)
                 }
                 GridRow {
-                    DetailItem(label: "BSSID", value: bssid.uppercased())
-                    DetailItem(label: "Noise", value: "\(noise) dBm")
+                    DetailItem(label: "BSSID", value: viewModel.bssid.uppercased())
+                    DetailItem(label: "Noise", value: "\(viewModel.noise) dBm")
                 }
             }
         }
-        .padding(16)
+        .padding(12)
         .background(
             ZStack {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -158,8 +179,8 @@ struct NetworkDetailsDashboard: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(Color.primary.opacity(0.08), lineWidth: 0.5)
         )
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 4)
     }
 }
 
@@ -181,26 +202,4 @@ struct DetailItem: View {
     }
 }
 
-class ModernDashboardMenuItem: NSMenuItem {
-    init(ssid: String, ipAddress: String, router: String, signal: Int, noise: Int, txRate: String, channel: String, phyMode: String, bssid: String) {
-        super.init(title: "Dashboard", action: nil, keyEquivalent: "")
-        let view = NetworkDetailsDashboard(
-            ssid: ssid,
-            ipAddress: ipAddress,
-            router: router,
-            signal: signal,
-            noise: noise,
-            txRate: txRate,
-            channel: channel,
-            phyMode: phyMode,
-            bssid: bssid
-        )
-        self.view = NSHostingView(rootView: view)
-        self.view?.frame = NSRect(x: 0, y: 0, width: 320, height: 280)
-    }
-    
-    required init(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
 

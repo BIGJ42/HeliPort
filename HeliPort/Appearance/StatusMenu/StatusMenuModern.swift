@@ -115,6 +115,8 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
     private var knownNetworkItemList = [NSMenuItem]()
     private var otherNetworkItemList = [NSMenuItem]()
+    private var currentSSID: String?
+    private lazy var dashboardViewModel = NetworkDetailsViewModel()
 
     // - MARK: Init
 
@@ -131,47 +133,51 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
     func setupMenu() {
         addItem(statusItem)
+        addItem(.separator())
+        
+        addItem(knownSectionItem)
+        
+        // Dashboard
+        currentNetworkItem.view = NSHostingView(rootView: NetworkDetailsDashboard(viewModel: dashboardViewModel))
+        currentNetworkItem.view?.frame = NSRect(x: 0, y: 0, width: 320, height: 260)
+        addItem(currentNetworkItem)
+        
+        addItem(.separator())
+        addItem(otherSectionItem)
+        addItem(manuallyJoinItem)
+        
+        addItem(networkItemListSeparator)
+        
+        // Fix for networkPanelItem: ensure it has target and action
+        networkPanelItem.target = self
+        networkPanelItem.action = #selector(clickMenuItem(_:))
+        addClickItem(networkPanelItem)
 
+        addItem(.separator())
+        
+        addClickItem(checkUpdateItem)
+        addClickItem(aboutItem)
+        addItem(quitSeparator)
+        addClickItem(quitItem)
+        
+        // Technical & Hidden items at the bottom
+        addItem(.separator())
+        
         [bsdItem, macItem, itlwmVerItem].forEach {
             $0.view = KeyValueMenuItemView(key: $0.title, inset: .standard)
             addItem($0)
         }
-
-        addItem(hardwareInfoSeparator)
-
-        addClickItem(enableLoggingItem)
-        addClickItem(createReportItem)
-        addClickItem(diagnoseItem)
-
-        addItem(.separator())
-        addItem(knownSectionItem)
-
-        // Current Network Item will be added dynamically by setCurrentNetworkItem
-        addItem(currentNetworkItem)
-
+        
         stationInfoItems.forEach {
             $0.view = KeyValueMenuItemView(key: $0.title, inset: .staInfo)
             addItem($0)
         }
-
-        headerLength = items.count
-
-        addItem(.separator())
-        addItem(otherSectionItem)
-
-        addClickItem(manuallyJoinItem)
-        addItem(networkItemListSeparator)
-
-        addClickItem(networkPanelItem)
-
-        addItem(.separator())
-
+        
+        addItem(hardwareInfoSeparator)
+        addClickItem(enableLoggingItem)
+        addClickItem(createReportItem)
+        addClickItem(diagnoseItem)
         addClickItem(toggleLaunchItem)
-        addClickItem(checkUpdateItem)
-        addClickItem(aboutItem)
-
-        addItem(quitSeparator)
-        addClickItem(quitItem)
     }
 
     // - MARK: Menu Updates
@@ -191,29 +197,44 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
             }
 
             self.isNetworkListEmpty = networkListSize == 0 && !self.isNetworkConnected
-            self.knownSectionItem.isHidden = knownList.isEmpty && !self.isNetworkConnected
+            let hasSaved = !CredentialsManager.instance.getSavedNetworkSSIDs().isEmpty
+            let showKnown = !knownList.isEmpty || self.isNetworkConnected || hasSaved
+            self.knownSectionItem.isHidden = !showKnown
             (self.knownSectionItem.view as? SectionMenuItemView)?
-                .title = (knownList.count > 1 ? .Modern.knownNetworks : .Modern.knownNetwork)
-
-            if otherList.isEmpty {
-                self.manuallyJoinItem.isHidden = false
-            } else {
-                self.manuallyJoinItem.isHidden = !(self.otherSectionItem.view as? SectionMenuItemView)!.isExpanded
-            }
-            self.otherSectionItem.isHidden = otherList.isEmpty
+                .title = (knownList.count > (self.isNetworkConnected ? 0 : 1) ? .Modern.knownNetworks : .Modern.knownNetwork)
 
             let staInfo: NetworkInfo? = (self.isNetworkConnected
-                                         ? (self.currentNetworkItem.view as? WifiMenuItemView)?.networkInfo
+                                         ? NetworkInfo(ssid: self.currentSSID ?? "")
                                          : nil)
 
+        DispatchQueue.main.async {
+            self.update() // Update NSMenu
+            
+            let staInfo: NetworkInfo? = (self.isNetworkConnected
+                                         ? NetworkInfo(ssid: self.currentSSID ?? "")
+                                         : nil)
+
+            let insertAtKnown = self.index(of: self.currentNetworkItem) + 1
             self.processNetworkList(from: knownList, to: &self.knownNetworkItemList,
-                                    insertAt: self.headerLength, staInfo)
+                                    insertAt: insertAtKnown, staInfo)
+            
+            let currentExpand = (self.otherSectionItem.view as? SectionMenuItemView)?.isExpanded ?? false
+            self.otherSectionItem.isHidden = otherList.isEmpty
+            let insertAtOther = self.index(of: self.otherSectionItem) + 1
             self.processNetworkList(from: otherList, to: &self.otherNetworkItemList,
-                                    insertAt: (self.headerLength + self.knownNetworkItemList.count
-                                               + 2 /* separator + section header */),
-                                    staInfo, hidden: !(self.otherSectionItem.view as? SectionMenuItemView)!.isExpanded)
+                                    insertAt: insertAtOther,
+                                    staInfo, hidden: !currentExpand)
+            
+            // Sync expansion state for manual join item and list items
+            self.manuallyJoinItem.isHidden = !currentExpand
+            self.otherNetworkItemList.forEach { $0.isHidden = !currentExpand }
+            
+            self.networkItemListSeparator.isHidden = self.otherSectionItem.isHidden && self.knownNetworkItemList.isEmpty
+            
+            self.update() // Final update after processing
         }
     }
+}
 
     func toggleWIFI() {
         DispatchQueue.main.async {
@@ -227,8 +248,11 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         super.menuWillOpen(menu)
 
         guard isNetworkCardEnabled else { return }
-        (otherSectionItem.view as? SectionMenuItemView)?
-            .isExpanded = (!self.isNetworkConnected && self.knownNetworkItemList.isEmpty)
+        
+        let hasSavedNetworks = !CredentialsManager.instance.getSavedNetworkSSIDs().isEmpty
+        let expandOther = !self.isNetworkConnected && !hasSavedNetworks && self.knownNetworkItemList.isEmpty
+        
+        (otherSectionItem.view as? SectionMenuItemView)?.isExpanded = expandOther
     }
 
     override func addClickItem(_ item: NSMenuItem) {
@@ -265,6 +289,14 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
             self.cancelTracking()
         }
         
+        newItem.isHidden = hidden
+        
+        // Only call super if we actually want to insert it into the menu at a specific position.
+        // Otherwise, just return the constructed item (e.g. for processNetworkList reuse logic).
+        guard let insertAt = insertAt else {
+            return newItem
+        }
+        
         return super.addNetworkItem(newItem, insertAt: insertAt, hidden: hidden, networkInfo: networkInfo)
     }
 
@@ -280,24 +312,19 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         }
 
         isNetworkConnected = info.isNetworkConnected
+        currentSSID = info.ssid
         currentNetworkItem.isHidden = !isNetworkConnected
-        
-        if isNetworkConnected, let ssid = info.ssid {
-            let dashboard = ModernDashboardMenuItem(
-                ssid: ssid,
-                ipAddress: info.ipAddr,
-                router: info.routerAddr,
-                signal: info.rssiValue,
-                noise: Int(info.noise.replacingOccurrences(of: " dBm", with: "")) ?? 0,
-                txRate: info.txRate,
-                channel: info.channel,
-                phyMode: info.phyMode,
-                bssid: info.bssid
-            )
-            currentNetworkItem.view = dashboard.view
+
+        if isNetworkConnected {
+            dashboardViewModel.update(with: info)
         }
-        
+
         super.setCurrentNetworkItem(with: info)
+
+        // Ensure isNetworkListEmpty is updated to false if connected
+        if isNetworkConnected && isNetworkListEmpty {
+            isNetworkListEmpty = false
+        }
     }
 }
 

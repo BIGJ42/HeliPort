@@ -84,14 +84,14 @@ class SectionMenuItemView: SelectableMenuItemView {
     private func animateImageTransition(imageView: NSImageView, toImage: NSImage?, onComplete: (() -> Void)? = nil) {
         // Fade out
         NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.25
+            context.duration = 0.1
             imageView.animator().alphaValue = 0.0
         }, completionHandler: {
             imageView.image = toImage
 
             // Fade in
             NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.25
+                context.duration = 0.1
                 imageView.animator().alphaValue = 0.9
             }, completionHandler: onComplete)
         })

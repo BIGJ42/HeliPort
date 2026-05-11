@@ -45,7 +45,6 @@ struct NetworkItemView: View {
         .modernMenuItem()
         .background(isHovered ? Color.primary.opacity(0.08) : Color.clear)
         .cornerRadius(6)
-        .padding(.horizontal, 4)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.1)) {
                 isHovered = hovering

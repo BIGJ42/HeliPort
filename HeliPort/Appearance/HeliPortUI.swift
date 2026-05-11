@@ -23,8 +23,8 @@ enum HeliPortUI {
         static let medium: CGFloat = 8
         static let large: CGFloat = 16
         static let xLarge: CGFloat = 24
-        static let menuHorizontalPadding: CGFloat = 12
-        static let menuVerticalPadding: CGFloat = 6
+        static let menuHorizontalPadding: CGFloat = 14
+        static let menuVerticalPadding: CGFloat = 4
     }
     
     enum IconSize {
