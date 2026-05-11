@@ -22,8 +22,7 @@ If you have any questions or feedback, feel free to [![Join the chat at https://
 
 HeliPort has been upgraded to **Version 3.0**, providing a state-of-the-art premium experience for Intel-based Macs. The app requires **macOS 13.0 (Ventura)** or newer and features a completely redesigned, high-fidelity user interface.
 
-### 🌟 V3.0 Premium Features
-- **💎 Glassmorphism Dashboard**: A stunning new real-time dashboard featuring glassmorphic effects, subtle gradients, and a refined typography system.
+### New Features
 - **📊 Advanced Telemetry**: Real-time signal strength history with high-frequency sampling (30 data points) and smoothed interpolation.
 - **🔧 Technical Deep-Dive**: The dashboard now always displays critical technical metrics including PHY Mode, Channel/Bandwidth, BSSID, and Noise levels.
 - **⚡️ Performance Optimized**: Rewritten UI components using modern SwiftUI patterns for minimal CPU impact while providing rich animations.
@@ -34,7 +33,7 @@ HeliPort has been upgraded to **Version 3.0**, providing a state-of-the-art prem
 - [x] Redesign Dashboard with V3 Glassmorphism UI
 - [x] Implement always-available technical telemetry (Noise, PHY, Channel)
 - [x] Enhance Signal Strength Charting (30 data points)
-- [x] Update project version to 3.0.0
+- [x] Update project version to 2.0
 - [x] Optimized Intel-only (x86_64) Architecture
 
 
