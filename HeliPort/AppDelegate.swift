@@ -78,10 +78,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Log.error("Running path unexpected!")
 
         let alert = CriticalAlert(message: NSLocalizedString("HeliPort running at an unexpected path"),
-                                  options: [NSLocalizedString("Quit HeliPort")])
-        alert.show()
-
-        NSApp.terminate(nil)
+                                  informativeText: NSLocalizedString("Moving HeliPort to the Applications folder is recommended for full functionality."),
+                                  options: [NSLocalizedString("Continue Anyway"),
+                                            NSLocalizedString("Quit HeliPort")])
+        
+        if alert.show() == .alertSecondButtonReturn {
+            NSApp.terminate(nil)
+        }
     }
 
     private func checkAPI() {
