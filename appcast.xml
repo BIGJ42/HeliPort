@@ -4,12 +4,16 @@
         <title>HeliPort</title>
         <item>
             <title>2.1</title>
-            <pubDate>Tue, 12 May 2026 19:38:47 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 19:58:41 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b90bdd18bc5a1c7df36d557e5c58dc23e1184376"><tt>b90bdd1</tt></a> chore: fix indentation of generated appcast.xml in main workflow</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/8ca4f782d068bb158118384a66a70ef3650a5313"><tt>8ca4f78</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/84897b120bc3f67ba1475e8e35f8e5b7d89ea68d"><tt>84897b1</tt></a> fix: update Sparkle signing logic to trim whitespace and synchronize Info.plist feed URL and keys</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3e3977a5ce504425feddd1ec786a8a11d9d04670"><tt>3e3977a</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/64a4ef1236b53939a0f1e6f81fdbcc306c73d7e6"><tt>64a4ef1</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/d4685388815990d3d66f76353272e274a05cf590"><tt>d468538</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/ad03cea861c9f73d0221b307c08bdb91fbc057a0"><tt>ad03cea</tt></a> chore: update Sparkle public ED25519 key in Info.plist</li>
@@ -21,7 +25,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1/HeliPort.dmg" sparkle:version="2.1-64a4ef1" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="5c4nd1qVULq+iN+KRtd01arf+3obgBfBKt5Vy9b8I7ZJIJAy2p8+uRaKFTFcQle0WkvCBPMRVyTgCR/o+DqHBg==" length="1746435"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-b90bdd1" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature=ZqNP+3F548QAd6Yt5/OcYUwDsoLJNt4XqvknKCkNGJ6DPx91u8Ik2mp8WdO/WCuoidi94TfT/ZDkUIySuM8+Bw== length=1746390/>
         </item>
     </channel>
 </rss>
