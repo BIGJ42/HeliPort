@@ -204,28 +204,28 @@ jobs:
         fi
 
         cat <<EOF > ./Artifacts/appcast.xml
-<?xml version="1.0" standalone="yes"?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
-    <channel>
-        <title>HeliPort</title>
-        <item>
-            <title>${VER}</title>
-            <pubDate>${PUBDATE}</pubDate>
-            <description><![CDATA[
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
-                <div class="markdown-body">
-                    <h3>The latest updates are:</h3>
-                    <ul>
-$(echo -e "${CHANGELOG}")
-                    </ul>
-                </div>
-            ]]></description>
-            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="${DMG_URL}" sparkle:version="${SPARKLE_BUILD}" sparkle:shortVersionString="${SPARKLE_SHORT}" type="application/octet-stream" ${SIGN_RESULT}/>
-        </item>
-    </channel>
-</rss>
-EOF
+        <?xml version="1.0" standalone="yes"?>
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+            <channel>
+                <title>HeliPort</title>
+                <item>
+                    <title>${VER}</title>
+                    <pubDate>${PUBDATE}</pubDate>
+                    <description><![CDATA[
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
+                        <div class="markdown-body">
+                            <h3>The latest updates are:</h3>
+                            <ul>
+        $(echo -e "${CHANGELOG}")
+                            </ul>
+                        </div>
+                    ]]></description>
+                    <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+                    <enclosure url="${DMG_URL}" sparkle:version="${SPARKLE_BUILD}" sparkle:shortVersionString="${SPARKLE_SHORT}" type="application/octet-stream" ${SIGN_RESULT}/>
+                </item>
+            </channel>
+        </rss>
+        EOF
         echo "Generated appcast.xml for version ${SPARKLE_SHORT} (${SPARKLE_BUILD})"
         cat ./Artifacts/appcast.xml
       shell: bash
