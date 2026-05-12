@@ -224,39 +224,45 @@ jobs:
         if [[ -n "${SPARKLE_KEY}" ]]; then
           # Pass key via temporary file to avoid deprecation warnings and signing errors
           echo "${SPARKLE_KEY}" > sparkle_private_key.txt
-          SIGN_RESULT="$($SPARKLE_BIN/sign_update --ed-key-file sparkle_private_key.txt ./Artifacts/HeliPort.dmg)"
+          # sign_update outputs: sparkle:edSignature="..." length="..."
+          RAW_SIGN_RESULT="$($SPARKLE_BIN/sign_update --ed-key-file sparkle_private_key.txt ./Artifacts/HeliPort.dmg)"
           SIGN_STATUS=$?
           rm sparkle_private_key.txt
+          
           if [[ $SIGN_STATUS -ne 0 ]]; then
             echo "::error::sign_update failed with exit code $SIGN_STATUS"
-            echo "Output: $SIGN_RESULT"
+            echo "Output: $RAW_SIGN_RESULT"
             exit 1
           fi
+          
+          # Trim whitespace and ensure we only have the attributes
+          SIGN_RESULT=$(echo "$RAW_SIGN_RESULT" | xargs)
+          echo "Generated signature attributes: $SIGN_RESULT"
         fi
 
         cat <<EOF > ./Artifacts/appcast.xml
-        <?xml version="1.0" standalone="yes"?>
-        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
-            <channel>
-                <title>HeliPort</title>
-                <item>
-                    <title>${VER}</title>
-                    <pubDate>${PUBDATE}</pubDate>
-                    <description><![CDATA[
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
-                        <div class="markdown-body">
-                            <h3>The latest updates are:</h3>
-                            <ul>
-        $(echo -e "${CHANGELOG}")
-                            </ul>
-                        </div>
-                    ]]></description>
-                    <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-                    <enclosure url="${DMG_URL}" sparkle:version="${SPARKLE_BUILD}" sparkle:shortVersionString="${SPARKLE_SHORT}" type="application/octet-stream" ${SIGN_RESULT}/>
-                </item>
-            </channel>
-        </rss>
-        EOF
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>HeliPort</title>
+        <item>
+            <title>${VER}</title>
+            <pubDate>${PUBDATE}</pubDate>
+            <description><![CDATA[
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
+                <div class="markdown-body">
+                    <h3>The latest updates are:</h3>
+                    <ul>
+$(echo -e "${CHANGELOG}")
+                    </ul>
+                </div>
+            ]]></description>
+            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+            <enclosure url="${DMG_URL}" sparkle:version="${SPARKLE_BUILD}" sparkle:shortVersionString="${SPARKLE_SHORT}" type="application/octet-stream" ${SIGN_RESULT}/>
+        </item>
+    </channel>
+</rss>
+EOF
         echo "Generated appcast.xml for version ${SPARKLE_SHORT} (${SPARKLE_BUILD})"
         cat ./Artifacts/appcast.xml
       shell: bash
