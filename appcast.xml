@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>HeliPort</title>
+        <item>
+            <title>2.1</title>
+            <pubDate>Tue, 12 May 2026 19:15:11 +0000</pubDate>
+            <description><![CDATA[
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
+                <div class="markdown-body">
+                    <h3>The latest updates are:</h3>
+                    <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/0c6095509039a35ba19cd22779ec97540803ba30"><tt>0c60955</tt></a> fix: conditionally delete prereleases and update Sparkle signing to use a key file instead of environment variables</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/09c6eafb532872785332022e854a964328ff7fc8"><tt>09c6eaf</tt></a> chore: add debug logging and error validation to Sparkle appcast generation script</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b15e3ba0574fc41059d4dabe842347d13963503d"><tt>b15e3ba</tt></a> refactor: improve release note generation logic and update Sparkle signing to use environment variables</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/91185c6c7d28133efecbaa8667e5367d9f424826"><tt>91185c6</tt></a> style: reformat appcast.xml generation block in main workflow with consistent indentation</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/ad8eb9ffd24e553479a0ecac6d1786fce9ea9f27"><tt>ad8eb9f</tt></a> chore: bump project version to 2.1</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/9324562a0ed31527ee593941883f7e941e77286c"><tt>9324562</tt></a> chore: update UI styling, improve status menu item placement, and automate appcast deployment via GitHub Actions</li>
+                    </ul>
+                </div>
+            ]]></description>
+            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-0c60955" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="hQ7NPBB4wKKunPatKGCaqfUgQ9qIoGM0wFcCEFwdNDMdrjWpmvS4IzM4+9TTbS3Lf+4t9VTtzW41BI116lA9Ag==" length="1746418"/>
+        </item>
+    </channel>
+</rss>
