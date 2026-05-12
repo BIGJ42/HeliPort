@@ -12,11 +12,11 @@ If you have any questions or feedback, feel free to [![Join the chat at https://
 
 ### Latest Stable Version
 
-[![Download from https://github.com/OpenIntelWireless/HeliPort/releases/latest](https://img.shields.io/github/v/release/OpenIntelWireless/HeliPort?color=%2300AABB&label=Download)](https://github.com/OpenIntelWireless/HeliPort/releases/latest)
+[![Download from https://github.com/bigj42/HeliPort/releases/latest](https://img.shields.io/github/v/release/bigj42/HeliPort?color=%2300AABB&label=Download)](https://github.com/bigj42/HeliPort/releases/latest)
 
 ### Latest Alpha Version
 
-[![Download from https://github.com/OpenIntelWireless/HeliPort/releases](https://img.shields.io/github/v/release/OpenIntelWireless/HeliPort?include_prereleases&label=Download)](https://github.com/OpenIntelWireless/HeliPort/releases)
+[![Download from https://github.com/bigj42/HeliPort/releases](https://img.shields.io/github/v/release/bigj42/HeliPort?include_prereleases&label=Download)](https://github.com/bigj42/HeliPort/releases)
 
 ## Status
 
