@@ -177,7 +177,7 @@ jobs:
       shell: bash
 
     - name: Delete Old Prerelease
-      if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
+      if: ((github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch') && env.OLD_PRE_TAG != 'NULL'
       run: gh release delete ${{ env.OLD_PRE_TAG }} --cleanup-tag
       continue-on-error: true
       env:
@@ -186,7 +186,6 @@ jobs:
     - name: Generate Sparkle Appcast
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
       run: |
-        set -x
         REPO_BASE='https://github.com/bigj42/heliport'
         REPO_COMMIT_URL="${REPO_BASE}/commit/"
         INDENT='                    '
@@ -213,7 +212,6 @@ jobs:
         SPARKLE_BIN='./build/SourcePackages/artifacts/sparkle/Sparkle/bin'
         if [[ ! -f "$SPARKLE_BIN/sign_update" ]]; then
           echo "::error::sign_update not found at $SPARKLE_BIN/sign_update"
-          ls -R build/SourcePackages/artifacts/sparkle
           exit 1
         fi
 
@@ -224,10 +222,14 @@ jobs:
 
         SIGN_RESULT=""
         if [[ -n "${SPARKLE_KEY}" ]]; then
-          export SUPrivateED25519Key="${SPARKLE_KEY}"
-          SIGN_RESULT="$($SPARKLE_BIN/sign_update ./Artifacts/HeliPort.dmg)"
-          if [[ $? -ne 0 ]]; then
-            echo "::error::sign_update failed"
+          # Pass key via temporary file to avoid deprecation warnings and signing errors
+          echo "${SPARKLE_KEY}" > sparkle_private_key.txt
+          SIGN_RESULT="$($SPARKLE_BIN/sign_update --ed-key-file sparkle_private_key.txt ./Artifacts/HeliPort.dmg)"
+          SIGN_STATUS=$?
+          rm sparkle_private_key.txt
+          if [[ $SIGN_STATUS -ne 0 ]]; then
+            echo "::error::sign_update failed with exit code $SIGN_STATUS"
+            echo "Output: $SIGN_RESULT"
             exit 1
           fi
         fi
