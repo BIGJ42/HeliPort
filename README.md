@@ -1,6 +1,5 @@
 # HeliPort
 ![image](appicon_512.png)
-[![CI](https://github.com/OpenIntelWireless/HeliPort/actions/workflows/main.yml/badge.svg)](https://github.com/OpenIntelWireless/HeliPort/actions/workflows/main.yml)
 
 Intel WiFi Client for [itlwm](https://github.com/OpenIntelWireless/itlwm)
 
