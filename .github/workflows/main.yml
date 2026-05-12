@@ -186,6 +186,7 @@ jobs:
     - name: Generate Sparkle Appcast
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
       run: |
+        set -x
         REPO_BASE='https://github.com/bigj42/heliport'
         REPO_COMMIT_URL="${REPO_BASE}/commit/"
         INDENT='                    '
@@ -210,6 +211,12 @@ jobs:
         fi
 
         SPARKLE_BIN='./build/SourcePackages/artifacts/sparkle/Sparkle/bin'
+        if [[ ! -f "$SPARKLE_BIN/sign_update" ]]; then
+          echo "::error::sign_update not found at $SPARKLE_BIN/sign_update"
+          ls -R build/SourcePackages/artifacts/sparkle
+          exit 1
+        fi
+
         PUBDATE="$(date +"%a, %d %b %Y %T %z")"
         DMG_URL="${REPO_BASE}/releases/download/${REL_TAG}/HeliPort.dmg"
         SPARKLE_SHORT="${VER}"
@@ -219,6 +226,10 @@ jobs:
         if [[ -n "${SPARKLE_KEY}" ]]; then
           export SUPrivateED25519Key="${SPARKLE_KEY}"
           SIGN_RESULT="$($SPARKLE_BIN/sign_update ./Artifacts/HeliPort.dmg)"
+          if [[ $? -ne 0 ]]; then
+            echo "::error::sign_update failed"
+            exit 1
+          fi
         fi
 
         cat <<EOF > ./Artifacts/appcast.xml
