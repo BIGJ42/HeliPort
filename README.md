@@ -25,7 +25,7 @@ HeliPort has been upgraded to **Version 3.0**, providing a state-of-the-art prem
 
 ### 🏁 Development Status
 
-- [x] Redesign Dashboard with V3 Glassmorphism UI
+- [x] Redesigned Dashboard
 - [x] Implement always-available technical telemetry (Noise, PHY, Channel)
 - [x] Enhance Signal Strength Charting (30 data points)
 - [x] Update project version to 2.0
