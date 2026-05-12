@@ -10,11 +10,9 @@ import Foundation
 import Sparkle
 
 final class UpdateManager {
-    public static let sharedController = SPUStandardUpdaterController(startingUpdater: true,
-                                                                      updaterDelegate: nil,
-                                                                      userDriverDelegate: nil)
-
-    public static var sharedUpdater: SPUUpdater { return sharedController.updater }
+    public static var sharedController: SPUStandardUpdaterController? {
+        return (NSApp.delegate as? AppDelegate)?.updaterController
+    }
 
     private init() {}
 }

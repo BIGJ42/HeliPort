@@ -17,6 +17,7 @@ class NetworkDetailsViewModel: ObservableObject {
     @Published var channel: String = ""
     @Published var phyMode: String = ""
     @Published var bssid: String = ""
+    @Published var snr: Int = 0
     @Published var signalHistory: [SignalData] = (0..<30).map { index in
         SignalData(time: Date().addingTimeInterval(Double(-index * 2)), value: Int.random(in: -70...(-60)))
     }
@@ -31,6 +32,7 @@ class NetworkDetailsViewModel: ObservableObject {
         self.channel = info.channel
         self.phyMode = info.phyMode
         self.bssid = info.bssid
+        self.snr = self.signal - self.noise
 
         let newData = SignalData(time: Date(), value: info.rssiValue)
         signalHistory.insert(newData, at: 0)
@@ -165,6 +167,7 @@ struct NetworkDetailsDashboard: View {
                 DetailItem(label: "PHY Mode", value: viewModel.phyMode, icon: "bolt.fill")
                 DetailItem(label: "BSSID", value: viewModel.bssid.uppercased(), icon: "macpro.gen3")
                 DetailItem(label: "Noise", value: "\(viewModel.noise) dBm", icon: "ear.and.waveform")
+                DetailItem(label: "SNR", value: "\(viewModel.snr) dB", icon: "equal.circle")
             }
         }
         .padding(14)
@@ -203,6 +206,15 @@ struct DetailItem: View {
                     .truncationMode(.middle)
             }
             Spacer(minLength: 0)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(value, forType: .string)
+            
+            // Simple visual feedback could be added here if needed, 
+            // but for lightweight apps, a silent copy is often preferred 
+            // or a small haptic if available.
         }
     }
 }

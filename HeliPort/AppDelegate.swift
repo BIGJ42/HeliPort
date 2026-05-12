@@ -14,16 +14,22 @@
  */
 
 import Cocoa
+import Sparkle
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+    public var updaterController: SPUStandardUpdaterController?
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         checkRunPath()
         checkAPI()
 
         // Initialize Sparkle
-        _ = UpdateManager.sharedController
+        let controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updaterController = controller
+        controller.startUpdater()
 
         let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 

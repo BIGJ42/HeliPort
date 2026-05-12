@@ -39,6 +39,10 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
     private var networkListUpdateTimer: Timer?
     private var statusUpdateTimer: Timer?
 
+    private var isMenuOpen: Bool = false
+    private var lastStatusUpdateTime: Date = .distantPast
+    private let slowStatusUpdatePeriod: Double = 15
+
     // One instance at a time
     private lazy var preferenceWindow = PrefsWindow()
 
@@ -214,6 +218,7 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
     }
 
     func menuWillOpen(_ menu: NSMenu) {
+        isMenuOpen = true
         showAllOptions = (NSApp.currentEvent?.modifierFlags.contains(.option)) ?? false
 
         DispatchQueue.global(qos: .default).async {
@@ -233,6 +238,7 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
     }
 
     func menuDidClose(_ menu: NSMenu) {
+        isMenuOpen = false
         networkListUpdateTimer?.invalidate()
         (menu.highlightedItem?.view as? SelectableMenuItemView)?.isMouseOver = false
     }
@@ -341,6 +347,12 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
     }
 
     @objc private func updateStatus() {
+        let interval = isMenuOpen ? statusUpdatePeriod : slowStatusUpdatePeriod
+        guard Date().timeIntervalSince(lastStatusUpdateTime) >= interval else {
+            return
+        }
+        lastStatusUpdateTime = Date()
+
         DispatchQueue.global(qos: .background).async {
             var powerState: Bool = false
             let get_power_ret = get_power_state(&powerState)
