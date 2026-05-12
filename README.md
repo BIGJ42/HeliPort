@@ -1,5 +1,5 @@
 # HeliPort
-![image](AppIcon-512.png)
+![image](AppIcon-128.png)
 
 Intel WiFi Client for [itlwm](https://github.com/OpenIntelWireless/itlwm)
 
