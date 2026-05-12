@@ -1,12 +1,8 @@
 # HeliPort
-
+![image](appicon_512.png)
 [![CI](https://github.com/OpenIntelWireless/HeliPort/actions/workflows/main.yml/badge.svg)](https://github.com/OpenIntelWireless/HeliPort/actions/workflows/main.yml)
 
 Intel WiFi Client for [itlwm](https://github.com/OpenIntelWireless/itlwm)
-
-## Chat
-
-If you have any questions or feedback, feel free to [![Join the chat at https://gitter.im/OpenIntelWireless/itlwm](https://badges.gitter.im/OpenIntelWireless/itlwm.svg)](https://gitter.im/OpenIntelWireless/itlwm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Download
 
