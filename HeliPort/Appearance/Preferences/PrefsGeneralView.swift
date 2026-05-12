@@ -29,7 +29,7 @@ class PrefsGeneralView: NSView {
                                 target: self,
                                 action: #selector(checkboxChanged(_:)))
         checkbox.identifier = .autoUpdateId
-        checkbox.state = UpdateManager.sharedUpdater.automaticallyChecksForUpdates ? .on : .off
+        checkbox.state = UpdateManager.sharedUpdater?.automaticallyChecksForUpdates ?? false ? .on : .off
         return checkbox
     }()
 
@@ -38,7 +38,7 @@ class PrefsGeneralView: NSView {
                                 target: self,
                                 action: #selector(checkboxChanged(_:)))
         checkbox.identifier = .autoDownloadId
-        checkbox.state = UpdateManager.sharedUpdater.automaticallyDownloadsUpdates ? .on : .off
+        checkbox.state = UpdateManager.sharedUpdater?.automaticallyDownloadsUpdates ?? false ? .on : .off
         return checkbox
     }()
 
@@ -111,9 +111,9 @@ extension PrefsGeneralView {
 
         switch identifier {
         case .autoUpdateId:
-            UpdateManager.sharedUpdater.automaticallyChecksForUpdates = sender.state == .on
+            UpdateManager.sharedUpdater?.automaticallyChecksForUpdates = sender.state == .on
         case .autoDownloadId:
-            UpdateManager.sharedUpdater.automaticallyDownloadsUpdates = sender.state == .on
+            UpdateManager.sharedUpdater?.automaticallyDownloadsUpdates = sender.state == .on
         case .bitrateId:
             UserDefaults.standard.set(sender.state == .on, forKey: .DefaultsKey.showBitrateInMenuBar)
             // Notify StatusBarIcon to update immediately if possible

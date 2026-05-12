@@ -14,5 +14,9 @@ final class UpdateManager {
         return (NSApp.delegate as? AppDelegate)?.updaterController
     }
 
+    public static var sharedUpdater: SPUUpdater? {
+        return sharedController?.updater
+    }
+
     private init() {}
 }
