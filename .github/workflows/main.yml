@@ -37,9 +37,9 @@ jobs:
         eval $(grep -m 1 "MARKETING_VERSION =" HeliPort.xcodeproj/project.pbxproj | tr -d ';' | tr -d '\t' | tr -d " ")
 
         if [[ "$GITHUB_EVENT_NAME" != 'workflow_dispatch' ]]; then
-          sed -i '' -e "s/CURRENT_PROJECT_VERSION =.*/CURRENT_PROJECT_VERSION = \"\$(MARKETING_VERSION)-alpha-${GIT_SHA}\";/g" HeliPort.xcodeproj/project.pbxproj
+          sed -i '' -e "s/CURRENT_PROJECT_VERSION =.*/CURRENT_PROJECT_VERSION = \"$(MARKETING_VERSION)-alpha-${GIT_SHA}\";/g" HeliPort.xcodeproj/project.pbxproj
         else
-          sed -i '' -e "s/CURRENT_PROJECT_VERSION =.*/CURRENT_PROJECT_VERSION = \"\$(MARKETING_VERSION)-stable-${GIT_SHA}\";/g" HeliPort.xcodeproj/project.pbxproj
+          sed -i '' -e "s/CURRENT_PROJECT_VERSION =.*/CURRENT_PROJECT_VERSION = \"$(MARKETING_VERSION)-stable-${GIT_SHA}\";/g" HeliPort.xcodeproj/project.pbxproj
         fi
 
         echo "VER=$MARKETING_VERSION" >> $GITHUB_ENV
@@ -47,7 +47,7 @@ jobs:
         if [[ -z $CUR_TAG ]]; then
           echo "OLD_PRE_TAG=NULL" >> $GITHUB_ENV
         else
-          echo "OLD_PRE_TAG=$CUR_TAG">> $GITHUB_ENV
+          echo "OLD_PRE_TAG=$CUR_TAG" >> $GITHUB_ENV
         fi
       shell: zsh {0}
 
@@ -145,8 +145,8 @@ jobs:
 
         echo '### Disclaimer:' >> ReleaseNotes.md
         echo '***This alpha version is for testing only.***' >> ReleaseNotes.md
-        echo 'It is not ready for daily use and we do not guarantee its usability.' >> ReleaseNotes.md
-        echo 'If you discovered an issue and you do not have debugging skills, please check with the [Gitter Chat Room](https://gitter.im/OpenIntelWireless/itlwm) in advance before opening an Issue.' >> ReleaseNotes.md
+        echo 'It is not ready for daily use.' >> ReleaseNotes.md
+        echo 'Please report issues at https://github.com/bigj42/heliport/issues' >> ReleaseNotes.md
 
     - name: Setup Release Variables
       if: github.event_name == 'workflow_dispatch'
@@ -168,25 +168,49 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Generate Sparkle Appcast
-      if: github.event_name == 'workflow_dispatch'
+      # Generate appcast.xml for both alpha (push) and stable (workflow_dispatch) releases.
+      # Sparkle compares sparkle:shortVersionString (e.g. "1.5") against CFBundleShortVersionString
+      # set in Xcode. Any release tag newer than the installed version will trigger an update prompt.
+      if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
       run: |
-        REPO_COMMIT_URL='https://github.com/OpenIntelWireless/HeliPort/commit/'
+        REPO_BASE='https://github.com/bigj42/heliport'
+        REPO_COMMIT_URL="${REPO_BASE}/commit/"
         INDENT='                    '
         PART1="${INDENT}<li><a class=\"commit-link\" data-hovercard-type=\"commit\" data-hovercard-url=\"${REPO_COMMIT_URL}"
         PART2="/hovercard\" href=\"${REPO_COMMIT_URL}"
         PART3="\"><tt>"
         PART4='</tt></a> '
         PART5='</li>'
-        CHANGELOG="$(git log -"$(git rev-list --count $(git rev-list -1 "$(git tag -l | grep -v 'alpha' | tail -1)")..HEAD)" --format="${PART1}%H${PART2}%H${PART3}%h${PART4}%s${PART5}" | cat)"
+
+        # Build changelog HTML from commits since last stable tag
+        LAST_STABLE="$(git tag -l | grep -v 'alpha' | sort -V | tail -1)"
+        if [[ -z "$LAST_STABLE" ]]; then
+          COMMIT_COUNT="$(git rev-list --count HEAD)"
+        else
+          COMMIT_COUNT="$(git rev-list --count ${LAST_STABLE}..HEAD)"
+        fi
+        CHANGELOG="$(git log -"${COMMIT_COUNT}" --format="${PART1}%H${PART2}%H${PART3}%h${PART4}%s${PART5}" | cat)"
 
         SPARKLE_BIN='./build/SourcePackages/artifacts/sparkle/Sparkle/bin'
         PUBDATE="$(date +"%a, %d %b %Y %T %z")"
+
+        # The DMG is always uploaded to the release, accessible via the latest download URL.
+        # Use the versioned tag URL so older appcast entries keep working.
+        DMG_URL="${REPO_BASE}/releases/download/${REL_TAG}/HeliPort.dmg"
+
+        # sparkle:shortVersionString must match MARKETING_VERSION in Xcode (e.g. "1.5").
+        # Sparkle triggers an update when it finds a version higher than the installed one.
+        SPARKLE_SHORT="${VER}"
+        SPARKLE_BUILD="${VER}-${SHORT_SHA}"
+
+        SIGN_RESULT="$($SPARKLE_BIN/sign_update -s ${SPARKLE_KEY} ./Artifacts/HeliPort.dmg)"
+
         APPCAST=(
             '<?xml version="1.0" standalone="yes"?>'
             '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">'
             '    <channel>'
             '        <title>HeliPort</title>'
-            '        <item>'
+            "        <item>"
             "            <title>${VER}</title>"
             "            <pubDate>${PUBDATE}</pubDate>"
             '            <description><![CDATA['
@@ -195,16 +219,19 @@ jobs:
             '                </ul></div>'
             '            ]]>'
             '            </description>'
-            '            <sparkle:minimumSystemVersion>10.12</sparkle:minimumSystemVersion>'
-            "            <enclosure url=\"https://github.com/OpenIntelWireless/HeliPort/releases/latest/download/HeliPort.dmg\" sparkle:version=\"${VER}-stable-${SHORT_SHA}\" sparkle:shortVersionString=\"${VER}\" type=\"application/octet-stream\" $($SPARKLE_BIN/sign_update -s ${SPARKLE_KEY} ./Artifacts/HeliPort.dmg)/>"
+            '            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>'
+            "            <enclosure url=\"${DMG_URL}\" sparkle:version=\"${SPARKLE_BUILD}\" sparkle:shortVersionString=\"${SPARKLE_SHORT}\" type=\"application/octet-stream\" ${SIGN_RESULT}/>"
             '        </item>'
             '    </channel>'
             '</rss>'
         )
 
-        for appcast in "${APPCAST[@]}"; do
-            echo "${appcast}" >> ./Artifacts/appcast.xml
+        for line in "${APPCAST[@]}"; do
+            echo "${line}" >> ./Artifacts/appcast.xml
         done
+
+        echo "Generated appcast.xml for version ${SPARKLE_SHORT} (${SPARKLE_BUILD})"
+        cat ./Artifacts/appcast.xml
       shell: zsh {0}
       env:
         SPARKLE_KEY: ${{ secrets.SPARKLE_KEY }}
