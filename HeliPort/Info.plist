@@ -50,7 +50,7 @@
 	<false/>
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/bigj42/HeliPort/master/appcast.xml</string>
-	<key>SUPublicEDKey</key>
+	<key>SUPublicED25519Key</key>
 	<string>ktrt51VPmrIyECEE/mqZCmOSNFBX6HLCpP+OB1V6G28=</string>
 </dict>
 </plist>
