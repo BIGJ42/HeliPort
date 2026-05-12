@@ -20,6 +20,7 @@ import Sparkle
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     public var updaterController: SPUStandardUpdaterController?
+    private let updaterDelegate = SparkleDelegate()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
@@ -27,9 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         checkAPI()
 
         // Initialize Sparkle
-        let controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        let controller = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: updaterDelegate, userDriverDelegate: nil)
         self.updaterController = controller
-        controller.startUpdater()
 
         let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
