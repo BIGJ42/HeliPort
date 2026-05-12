@@ -28,7 +28,7 @@ HeliPort has been upgraded to **Version 3.0**, providing a state-of-the-art prem
 - [x] Redesigned Dashboard
 - [x] Implement always-available technical telemetry (Noise, PHY, Channel)
 - [x] Enhance Signal Strength Charting (30 data points)
-- [x] Update project version to 2.0
+- [x] Update project version to 3.0
 - [x] Optimized Intel-only (x86_64) Architecture
 
 

@@ -75,7 +75,7 @@ class ModernNetworkMenuItem: NSMenuItem {
         let view = NetworkItemView(ssid: ssid, signalStrength: signalStrength, isConnected: isConnected, isSecure: isSecure, onSelect: onSelect)
         self.view = NSHostingView(rootView: view)
         // Adjust frame to fit menu
-        self.view?.frame = NSRect(x: 0, y: 0, width: 300, height: 40)
+        self.view?.frame = NSRect(x: 0, y: 0, width: HeliPortUI.Dashboard.width, height: 40)
     }
     
     @objc private func itemAction() {

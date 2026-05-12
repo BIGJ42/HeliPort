@@ -18,7 +18,7 @@ import Cocoa
 class KeyValueMenuItemView: HidableMenuItemView {
 
     enum Inset: CGFloat {
-        case standard = 14
+        case standard = 14 // Matches HeliPortUI.Spacing.menuHorizontalPadding
         case staInfo = 34
     }
 
@@ -57,7 +57,7 @@ class KeyValueMenuItemView: HidableMenuItemView {
             keyLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset.rawValue),
             valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             valueLabel.leadingAnchor.constraint(equalTo: keyLabel.trailingAnchor),
-            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14)
+            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -HeliPortUI.Spacing.menuHorizontalPadding)
         ])
     }
 

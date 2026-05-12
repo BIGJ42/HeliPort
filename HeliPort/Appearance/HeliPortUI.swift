@@ -38,6 +38,23 @@ enum HeliPortUI {
         static let small: CGFloat = 6
         static let medium: CGFloat = 12
         static let large: CGFloat = 18
+        static let xLarge: CGFloat = 24
+    }
+
+    enum Dashboard {
+        static let width: CGFloat = 320
+        static let height: CGFloat = 260
+        static let iconSize: CGFloat = 42
+        
+        static let premiumGradient = LinearGradient(
+            colors: [
+                SwiftUI.Color.accentColor.opacity(0.12),
+                SwiftUI.Color.accentColor.opacity(0.04),
+                SwiftUI.Color.clear
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 }
 

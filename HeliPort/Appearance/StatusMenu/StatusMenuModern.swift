@@ -120,7 +120,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
 
     override init() {
         super.init()
-        minimumWidth = 320
+        minimumWidth = HeliPortUI.Dashboard.width
     }
 
     required init(coder: NSCoder) {
@@ -137,7 +137,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         
         // Dashboard
         currentNetworkItem.view = NSHostingView(rootView: NetworkDetailsDashboard(viewModel: dashboardViewModel))
-        currentNetworkItem.view?.frame = NSRect(x: 0, y: 0, width: 320, height: 260)
+        currentNetworkItem.view?.frame = NSRect(x: 0, y: 0, width: HeliPortUI.Dashboard.width, height: HeliPortUI.Dashboard.height)
         addItem(currentNetworkItem)
         
         addItem(.separator())
@@ -264,7 +264,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         view.addSubview(label)
         view.setupLayout()
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14).isActive = true
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: HeliPortUI.Spacing.menuHorizontalPadding).isActive = true
 
         item.view = view
 

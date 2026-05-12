@@ -460,32 +460,45 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
     func setCurrentNetworkItem(with info: StationInfo) {
         isNetworkConnected = info.isNetworkConnected
 
-        guard isNetworkCardEnabled,
-              let wifiItemView = currentNetworkItem.view as? WifiMenuItemView else { return }
+        guard isNetworkCardEnabled else { return }
 
         // disconnected -> connected
-        if !wifiItemView.connected && info.isNetworkConnected {
+        if info.isNetworkConnected {
             for index in self.headerLength ..< self.items.count {
-                if let view = self.items[index].view as? WifiMenuItemView,
-                   view.networkInfo.ssid == info.ssid {
-                    self.items[index].isHidden = true
-                    self.items[index].isEnabled = false
+                let item = self.items[index]
+                let itemSSID: String? = {
+                    if let view = item.view as? WifiMenuItemView {
+                        return view.networkInfo.ssid
+                    }
+                    if #available(macOS 11, *), item is ModernNetworkMenuItem {
+                        return item.title
+                    }
+                    return nil
+                }()
+
+                if let itemSSID = itemSSID, itemSSID == info.ssid {
+                    item.isHidden = true
+                    item.isEnabled = false
                     break
                 }
             }
         }
 
         currentNetworkItem.isHidden = !isNetworkConnected
-        wifiItemView.connected = isNetworkConnected
+        if let wifiView = currentNetworkItem.view as? WifiMenuItemView {
+            wifiView.connected = isNetworkConnected
+        }
 
         guard isNetworkConnected else { return }
 
         isNetworkListEmpty = false
-        if let staSSID = info.ssid, wifiItemView.networkInfo.ssid != staSSID {
-            wifiItemView.networkInfo = NetworkInfo(ssid: staSSID, rssi: info.rssiValue)
-        } else {
-            wifiItemView.networkInfo.rssi = info.rssiValue
-            wifiItemView.updateImages()
+        if let wifiView = currentNetworkItem.view as? WifiMenuItemView {
+            if let staSSID = info.ssid, wifiView.networkInfo.ssid != staSSID {
+                wifiView.networkInfo = NetworkInfo(ssid: staSSID, rssi: info.rssiValue)
+            } else {
+                wifiView.networkInfo.rssi = info.rssiValue
+                wifiView.updateImages()
+            }
         }
     }
 
@@ -498,7 +511,9 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
 
             if let staInfo, staInfo.ssid == info.ssid {
                 staInfo.auth.security = info.auth.security
-                (self.currentNetworkItem.view as? WifiMenuItemView)?.updateImages()
+                if let wifiView = self.currentNetworkItem.view as? WifiMenuItemView {
+                    wifiView.updateImages()
+                }
                 enabled = false
             }
 

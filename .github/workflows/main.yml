@@ -77,8 +77,9 @@ jobs:
             localizations = defaultdict(int)
 
             for string in strings.values():
-                for lang_code in string["localizations"].keys():
-                    localizations[lang_code] += 1
+                if "localizations" in string:
+                    for lang_code in string["localizations"].keys():
+                        localizations[lang_code] += 1
 
             summary = ["## i18n Stats", "",
                       "| Language | Code | Completion |",

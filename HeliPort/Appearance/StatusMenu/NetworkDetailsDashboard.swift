@@ -59,7 +59,7 @@ struct NetworkDetailsDashboard: View {
                 ZStack {
                     Circle()
                         .fill(Color.accentColor.opacity(0.1))
-                        .frame(width: 42, height: 42)
+                        .frame(width: HeliPortUI.Dashboard.iconSize, height: HeliPortUI.Dashboard.iconSize)
                     
                     Image(systemName: "wifi")
                         .font(.system(size: 18, weight: .semibold))
@@ -162,25 +162,19 @@ struct NetworkDetailsDashboard: View {
         .padding(12)
         .background(
             ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
                     .fill(Color(NSColor.windowBackgroundColor))
                 
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.accentColor.opacity(0.03), Color.clear],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
+                    .fill(HeliPortUI.Dashboard.premiumGradient)
             }
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
                 .stroke(Color.primary.opacity(0.08), lineWidth: 0.5)
         )
-        .padding(.horizontal, 6)
-        .padding(.vertical, 4)
+        .padding(.horizontal, HeliPortUI.Spacing.small + 2)
+        .padding(.vertical, HeliPortUI.Spacing.small)
     }
 }
 

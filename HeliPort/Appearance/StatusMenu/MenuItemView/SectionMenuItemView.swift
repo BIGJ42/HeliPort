@@ -111,11 +111,11 @@ class SectionMenuItemView: SelectableMenuItemView {
 
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: HeliPortUI.Spacing.menuHorizontalPadding),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -HeliPortUI.Spacing.menuHorizontalPadding),
 
             chevronImage.firstBaselineAnchor.constraint(equalTo: label.firstBaselineAnchor),
-            chevronImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -13)
+            chevronImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -(HeliPortUI.Spacing.menuHorizontalPadding - 1))
         ])
     }
 }
