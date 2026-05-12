@@ -523,6 +523,11 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
                 item.isHidden = hidden || !enabled
                 item.isEnabled = enabled
 
+                // Ensure item is at the correct position
+                if self.index(of: item) != insertAt + index {
+                    self.insertItem(item, at: insertAt + index)
+                }
+
                 if let wifiMenuItemView = item.view as? WifiMenuItemView {
                     wifiMenuItemView.networkInfo = info
                 } else if #available(macOS 11, *), let modernItem = item as? ModernNetworkMenuItem {

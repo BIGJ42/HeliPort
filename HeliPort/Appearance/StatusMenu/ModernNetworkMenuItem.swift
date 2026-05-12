@@ -24,13 +24,13 @@ struct NetworkItemView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(ssid)
-                    .font(.system(size: 13, weight: isConnected ? .bold : .medium))
+                    .font(.system(size: 13, weight: isConnected ? .bold : .semibold, design: .rounded))
                     .foregroundColor(.primary)
                 
                 if isConnected {
                     Text("Connected")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(.accentColor)
                 }
             }
             

@@ -23,8 +23,9 @@ class SectionMenuItemView: SelectableMenuItemView {
 
     private let label: NSTextField = {
         let label = NSTextField(labelWithString: "")
-        label.font = NSFont.systemFont(ofSize: 12, weight: .semibold)
+        label.font = NSFont.systemFont(ofSize: 10, weight: .black)
         label.textColor = .secondaryLabelColor
+        label.alphaValue = 0.7
         return label
     }()
 
@@ -112,10 +113,10 @@ class SectionMenuItemView: SelectableMenuItemView {
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: HeliPortUI.Spacing.menuHorizontalPadding),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -HeliPortUI.Spacing.menuHorizontalPadding),
+            label.trailingAnchor.constraint(lessThanOrEqualTo: chevronImage.leadingAnchor, constant: -4),
 
-            chevronImage.firstBaselineAnchor.constraint(equalTo: label.firstBaselineAnchor),
-            chevronImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -(HeliPortUI.Spacing.menuHorizontalPadding - 1))
+            chevronImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            chevronImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -HeliPortUI.Spacing.menuHorizontalPadding)
         ])
     }
 }

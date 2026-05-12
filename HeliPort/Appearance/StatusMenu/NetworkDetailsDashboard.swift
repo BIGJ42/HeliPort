@@ -51,62 +51,76 @@ struct NetworkDetailsDashboard: View {
         return "\(viewModel.signal) dBm"
     }
     
+    private var signalColor: Color {
+        let rssi = viewModel.signal
+        if rssi > -60 { return .green }
+        if rssi > -75 { return Color(red: 1, green: 0.6, blue: 0) }
+        return .red
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
-            // Header Section
-            HStack(spacing: 12) {
-                // Icon with subtle glow
+            // Header
+            HStack(spacing: 10) {
                 ZStack {
                     Circle()
-                        .fill(Color.accentColor.opacity(0.1))
-                        .frame(width: HeliPortUI.Dashboard.iconSize, height: HeliPortUI.Dashboard.iconSize)
-                    
-                    Image(systemName: "wifi")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.accentColor)
+                        .fill(signalColor.opacity(0.12))
+                        .frame(width: 34, height: 34)
+                    Image(systemName: "wifi", variableValue: Double(max(0, viewModel.signal + 100)) / 100.0)
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(signalColor)
                 }
                 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 1) {
                     Text(viewModel.ssid)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
                     
                     HStack(spacing: 4) {
                         Circle()
-                            .fill(Color.green)
-                            .frame(width: 6, height: 6)
-                        Text("Connected • Stable")
+                            .fill(signalColor)
+                            .frame(width: 5, height: 5)
+                        Text("Connected")
                             .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(signalColor.opacity(0.9))
                     }
                 }
                 
                 Spacer()
                 
-                // Real-time Rate Badge
-                VStack(alignment: .trailing, spacing: 0) {
+                // Tx Rate Badge
+                VStack(alignment: .trailing, spacing: -1) {
                     Text(viewModel.txRate.replacingOccurrences(of: " Mbps", with: ""))
-                        .font(.system(size: 20, weight: .bold, design: .monospaced))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundColor(.primary)
                     Text("Mbps")
-                        .font(.system(size: 8, weight: .black))
+                        .font(.system(size: 7, weight: .heavy))
                         .foregroundColor(.secondary)
+                        .tracking(0.5)
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.primary.opacity(0.05))
+                .padding(.vertical, 5)
+                .background(.regularMaterial)
                 .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.5)
+                )
             }
-            .padding(.bottom, 16)
+            .padding(.bottom, 12)
             
-            // Chart Section
-            VStack(alignment: .leading, spacing: 6) {
+            // Signal Chart
+            VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text("SIGNAL STRENGTH")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 8, weight: .heavy))
+                        .foregroundColor(.secondary.opacity(0.7))
+                        .tracking(0.8)
                     Spacer()
                     Text(signalDisplay)
                         .font(.system(size: 9, weight: .bold, design: .monospaced))
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(signalColor)
                 }
                 
                 Chart {
@@ -117,7 +131,7 @@ struct NetworkDetailsDashboard: View {
                         )
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [Color.accentColor.opacity(0.2), Color.accentColor.opacity(0.0)],
+                                colors: [signalColor.opacity(0.25), signalColor.opacity(0.0)],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -128,70 +142,68 @@ struct NetworkDetailsDashboard: View {
                             x: .value("Time", data.time),
                             y: .value("Signal", data.value)
                         )
-                        .foregroundStyle(Color.accentColor)
-                        .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round))
+                        .foregroundStyle(signalColor.opacity(0.9))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, lineCap: .round))
                         .interpolationMethod(.catmullRom)
                     }
                 }
                 .chartYScale(domain: -90...(-30))
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
-                .frame(height: 40)
+                .frame(height: 32)
             }
-            .padding(.bottom, 16)
+            .padding(.bottom, 12)
             
-            Divider().opacity(0.5)
-                .padding(.bottom, 12)
+            Divider().opacity(0.15)
+                .padding(.bottom, 10)
             
-            // Technical Details Grid
-            Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 12) {
-                GridRow {
-                    DetailItem(label: "IP Address", value: viewModel.ipAddress)
-                    DetailItem(label: "Router", value: viewModel.router)
-                }
-                GridRow {
-                    DetailItem(label: "Channel", value: viewModel.channel)
-                    DetailItem(label: "PHY Mode", value: viewModel.phyMode)
-                }
-                GridRow {
-                    DetailItem(label: "BSSID", value: viewModel.bssid.uppercased())
-                    DetailItem(label: "Noise", value: "\(viewModel.noise) dBm")
-                }
+            // Details Grid
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                DetailItem(label: "IP Address", value: viewModel.ipAddress, icon: "network")
+                DetailItem(label: "Router", value: viewModel.router, icon: "router")
+                DetailItem(label: "Channel", value: viewModel.channel, icon: "antenna.radiowaves.left.and.right")
+                DetailItem(label: "PHY Mode", value: viewModel.phyMode, icon: "bolt.fill")
+                DetailItem(label: "BSSID", value: viewModel.bssid.uppercased(), icon: "macpro.gen3")
+                DetailItem(label: "Noise", value: "\(viewModel.noise) dBm", icon: "ear.and.waveform")
             }
         }
-        .padding(12)
-        .background(
-            ZStack {
-                RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
-                    .fill(Color(NSColor.windowBackgroundColor))
-                
-                RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
-                    .fill(HeliPortUI.Dashboard.premiumGradient)
-            }
-        )
+        .padding(14)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
-                .stroke(Color.primary.opacity(0.08), lineWidth: 0.5)
+                .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
         )
-        .padding(.horizontal, HeliPortUI.Spacing.small + 2)
-        .padding(.vertical, HeliPortUI.Spacing.small)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
     }
 }
 
 struct DetailItem: View {
     let label: String
     let value: String
+    let icon: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label.uppercased())
-                .font(.system(size: 8, weight: .black))
-                .foregroundColor(.secondary.opacity(0.7))
-                .tracking(0.5)
-            Text(value)
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundColor(.primary)
-                .lineLimit(1)
+        HStack(alignment: .center, spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 9, weight: .semibold))
+                .foregroundColor(.accentColor.opacity(0.7))
+                .frame(width: 12)
+            
+            VStack(alignment: .leading, spacing: 1) {
+                Text(label.uppercased())
+                    .font(.system(size: 7, weight: .heavy))
+                    .foregroundColor(.secondary.opacity(0.55))
+                    .tracking(0.6)
+                Text(value)
+                    .font(.system(size: 10.5, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+            Spacer(minLength: 0)
         }
     }
 }
+

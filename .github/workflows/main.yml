@@ -171,20 +171,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Generate Sparkle Appcast
-      # Generate appcast.xml for both alpha (push) and stable (workflow_dispatch) releases.
-      # Sparkle compares sparkle:shortVersionString (e.g. "1.5") against CFBundleShortVersionString
-      # set in Xcode. Any release tag newer than the installed version will trigger an update prompt.
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
       run: |
         REPO_BASE='https://github.com/bigj42/heliport'
         REPO_COMMIT_URL="${REPO_BASE}/commit/"
         INDENT='                    '
-        PART1="${INDENT}<li><a class=\"commit-link\" data-hovercard-type=\"commit\" data-hovercard-url=\"${REPO_COMMIT_URL}"
-        PART2="/hovercard\" href=\"${REPO_COMMIT_URL}"
-        PART3="\"><tt>"
-        PART4='</tt></a> '
-        PART5='</li>'
-
+        
         # Build changelog HTML from commits since last stable tag
         LAST_STABLE="$(git tag -l | grep -v 'alpha' | sort -V | tail -1)"
         if [[ -z "$LAST_STABLE" ]]; then
@@ -192,52 +184,65 @@ jobs:
         else
           COMMIT_COUNT="$(git rev-list --count ${LAST_STABLE}..HEAD)"
         fi
-        CHANGELOG="$(git log -"${COMMIT_COUNT}" --format="${PART1}%H${PART2}%H${PART3}%h${PART4}%s${PART5}" | cat)"
+        
+        # Escape XML characters in git log
+        CHANGELOG=""
+        git log -"${COMMIT_COUNT}" --format="%H %h %s" | while read -r sha short_sha subject; do
+          esc_subject=$(echo "$subject" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g')
+          CHANGELOG+="${INDENT}<li><a class=\"commit-link\" href=\"${REPO_COMMIT_URL}${sha}\"><tt>${short_sha}</tt></a> ${esc_subject}</li>\n"
+        done
 
         SPARKLE_BIN='./build/SourcePackages/artifacts/sparkle/Sparkle/bin'
         PUBDATE="$(date +"%a, %d %b %Y %T %z")"
-
-        # The DMG is always uploaded to the release, accessible via the latest download URL.
-        # Use the versioned tag URL so older appcast entries keep working.
         DMG_URL="${REPO_BASE}/releases/download/${REL_TAG}/HeliPort.dmg"
-
-        # sparkle:shortVersionString must match MARKETING_VERSION in Xcode (e.g. "1.5").
-        # Sparkle triggers an update when it finds a version higher than the installed one.
         SPARKLE_SHORT="${VER}"
         SPARKLE_BUILD="${VER}-${SHORT_SHA}"
 
-        SIGN_RESULT="$($SPARKLE_BIN/sign_update -s ${SPARKLE_KEY} ./Artifacts/HeliPort.dmg)"
+        SIGN_RESULT=""
+        if [[ -n "${SPARKLE_KEY}" ]]; then
+          SIGN_RESULT="$($SPARKLE_BIN/sign_update -s ${SPARKLE_KEY} ./Artifacts/HeliPort.dmg)"
+        fi
 
-        APPCAST=(
-            '<?xml version="1.0" standalone="yes"?>'
-            '<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">'
-            '    <channel>'
-            '        <title>HeliPort</title>'
-            "        <item>"
-            "            <title>${VER}</title>"
-            "            <pubDate>${PUBDATE}</pubDate>"
-            '            <description><![CDATA['
-            '                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8"><div class="markdown-body"><h3>The latest updates are:</h3><ul>'
-            "${CHANGELOG}"
-            '                </ul></div>'
-            '            ]]>'
-            '            </description>'
-            '            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>'
-            "            <enclosure url=\"${DMG_URL}\" sparkle:version=\"${SPARKLE_BUILD}\" sparkle:shortVersionString=\"${SPARKLE_SHORT}\" type=\"application/octet-stream\" ${SIGN_RESULT}/>"
-            '        </item>'
-            '    </channel>'
-            '</rss>'
-        )
-
-        for line in "${APPCAST[@]}"; do
-            echo "${line}" >> ./Artifacts/appcast.xml
-        done
-
+        cat <<EOF > ./Artifacts/appcast.xml
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>HeliPort</title>
+        <item>
+            <title>${VER}</title>
+            <pubDate>${PUBDATE}</pubDate>
+            <description><![CDATA[
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
+                <div class="markdown-body">
+                    <h3>The latest updates are:</h3>
+                    <ul>
+$(echo -e "${CHANGELOG}")
+                    </ul>
+                </div>
+            ]]></description>
+            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+            <enclosure url="${DMG_URL}" sparkle:version="${SPARKLE_BUILD}" sparkle:shortVersionString="${SPARKLE_SHORT}" type="application/octet-stream" ${SIGN_RESULT}/>
+        </item>
+    </channel>
+</rss>
+EOF
         echo "Generated appcast.xml for version ${SPARKLE_SHORT} (${SPARKLE_BUILD})"
         cat ./Artifacts/appcast.xml
-      shell: zsh {0}
+      shell: bash
       env:
         SPARKLE_KEY: ${{ secrets.SPARKLE_KEY }}
+
+    - name: Deploy Appcast to Master
+      if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
+      run: |
+        cp ./Artifacts/appcast.xml ./appcast.xml
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add appcast.xml
+        git commit -m "chore: update appcast.xml [skip ci]" || echo "No changes to commit"
+        git push origin master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish GitHub Release
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'

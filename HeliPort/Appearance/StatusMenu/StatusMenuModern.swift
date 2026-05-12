@@ -87,15 +87,13 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
     override var isNetworkListEmpty: Bool {
         willSet(empty) {
             super.isNetworkListEmpty = empty
-            knownSectionItem.isHidden = empty
-
-            guard empty else { return }
-
-            otherSectionItem.isHidden = true
-            manuallyJoinItem.isHidden = true
-
-            knownNetworkItemList.forEach { $0.isHidden = true }
-            otherNetworkItemList.forEach { $0.isHidden = true }
+            if empty {
+                knownSectionItem.isHidden = true
+                otherSectionItem.isHidden = true
+                manuallyJoinItem.isHidden = true
+                knownNetworkItemList.forEach { $0.isHidden = true }
+                otherNetworkItemList.forEach { $0.isHidden = true }
+            }
         }
     }
 
@@ -140,15 +138,11 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         currentNetworkItem.view?.frame = NSRect(x: 0, y: 0, width: HeliPortUI.Dashboard.width, height: HeliPortUI.Dashboard.height)
         addItem(currentNetworkItem)
         
-        addItem(.separator())
         addItem(otherSectionItem)
-        addItem(manuallyJoinItem)
+        addClickItem(manuallyJoinItem)
         
         addItem(networkItemListSeparator)
         
-        // Fix for networkPanelItem: ensure it has target and action
-        networkPanelItem.target = self
-        networkPanelItem.action = #selector(clickMenuItem(_:))
         addClickItem(networkPanelItem)
 
         addItem(.separator())
@@ -187,51 +181,46 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
     func updateNetworkList() {
         guard isNetworkCardEnabled else { return }
 
-        NetworkManager.scanNetwork { knownList, otherList in
+        NetworkManager.scanNetwork { [weak self] knownList, otherList in
+            guard let self = self else { return }
+
             let networkListSize = knownList.count + otherList.count
-            if networkListSize > MAX_NETWORK_LIST_LENGTH {
-                Log.error("Number of scanned networks (\(networkListSize))" +
-                          " exceeds maximum (\(MAX_NETWORK_LIST_LENGTH))")
+
+            DispatchQueue.main.async {
+                self.isNetworkListEmpty = networkListSize == 0 && !self.isNetworkConnected
+                
+                let showKnown = !knownList.isEmpty || self.isNetworkConnected
+                self.knownSectionItem.isHidden = !showKnown
+                (self.knownSectionItem.view as? SectionMenuItemView)?
+                    .title = (knownList.count > (self.isNetworkConnected ? 0 : 1) ? .Modern.knownNetworks : .Modern.knownNetwork)
+
+                let staInfo: NetworkInfo? = (self.isNetworkConnected
+                                             ? NetworkInfo(ssid: self.currentSSID ?? "")
+                                             : nil)
+
+                let insertAtKnown = self.index(of: self.currentNetworkItem) + 1
+                self.processNetworkList(from: knownList, to: &self.knownNetworkItemList,
+                                        insertAt: insertAtKnown, staInfo)
+                
+                let currentExpand = (self.otherSectionItem.view as? SectionMenuItemView)?.isExpanded ?? false
+                
+                // Keep other section visible if there are networks OR if we have no known networks (to allow manual join)
+                self.otherSectionItem.isHidden = otherList.isEmpty && !currentExpand && showKnown
+                
+                let insertAtOther = self.index(of: self.otherSectionItem) + 1
+                self.processNetworkList(from: otherList, to: &self.otherNetworkItemList,
+                                        insertAt: insertAtOther,
+                                        staInfo, hidden: !currentExpand)
+                
+                self.manuallyJoinItem.isHidden = !currentExpand
+                
+                // Show separator if anything was shown in the network sections
+                self.networkItemListSeparator.isHidden = !showKnown && self.otherSectionItem.isHidden
+                
+                self.update()
             }
-
-            self.isNetworkListEmpty = networkListSize == 0 && !self.isNetworkConnected
-            let hasSaved = !CredentialsManager.instance.getSavedNetworkSSIDs().isEmpty
-            let showKnown = !knownList.isEmpty || self.isNetworkConnected || hasSaved
-            self.knownSectionItem.isHidden = !showKnown
-            (self.knownSectionItem.view as? SectionMenuItemView)?
-                .title = (knownList.count > (self.isNetworkConnected ? 0 : 1) ? .Modern.knownNetworks : .Modern.knownNetwork)
-
-            let staInfo: NetworkInfo? = (self.isNetworkConnected
-                                         ? NetworkInfo(ssid: self.currentSSID ?? "")
-                                         : nil)
-
-        DispatchQueue.main.async {
-            self.update() // Update NSMenu
-            
-            let staInfo: NetworkInfo? = (self.isNetworkConnected
-                                         ? NetworkInfo(ssid: self.currentSSID ?? "")
-                                         : nil)
-
-            let insertAtKnown = self.index(of: self.currentNetworkItem) + 1
-            self.processNetworkList(from: knownList, to: &self.knownNetworkItemList,
-                                    insertAt: insertAtKnown, staInfo)
-            
-            let currentExpand = (self.otherSectionItem.view as? SectionMenuItemView)?.isExpanded ?? false
-            self.otherSectionItem.isHidden = otherList.isEmpty
-            let insertAtOther = self.index(of: self.otherSectionItem) + 1
-            self.processNetworkList(from: otherList, to: &self.otherNetworkItemList,
-                                    insertAt: insertAtOther,
-                                    staInfo, hidden: !currentExpand)
-            
-            // Sync expansion state for manual join item
-            self.manuallyJoinItem.isHidden = !currentExpand
-            
-            self.networkItemListSeparator.isHidden = self.otherSectionItem.isHidden && self.knownNetworkItemList.isEmpty
-            
-            self.update() // Final update after processing
         }
     }
-}
 
     func toggleWIFI() {
         DispatchQueue.main.async {
@@ -252,24 +241,6 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         (otherSectionItem.view as? SectionMenuItemView)?.isExpanded = expandOther
     }
 
-    override func addClickItem(_ item: NSMenuItem) {
-        let view = SelectableMenuItemView(height: .textModern, hoverStyle: .greytint)
-        let label: NSTextField = {
-            let label = NSTextField(labelWithString: item.title)
-            label.font = NSFont.menuFont(ofSize: 0)
-            label.textColor = .controlTextColor
-            return label
-        }()
-
-        view.addSubview(label)
-        view.setupLayout()
-        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: HeliPortUI.Spacing.menuHorizontalPadding).isActive = true
-
-        item.view = view
-
-        super.addClickItem(item)
-    }
 
     override func addNetworkItem(_ item: NSMenuItem = HPMenuItem(highlightable: true),
                                  insertAt: Int? = nil,

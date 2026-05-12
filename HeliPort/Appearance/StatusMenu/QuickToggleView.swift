@@ -8,11 +8,12 @@ struct QuickToggleView: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 15, weight: .bold, design: .rounded))
             Spacer()
             Toggle("", isOn: $isOn)
                 .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                 .labelsHidden()
+                .scaleEffect(0.8)
                 .onChange(of: isOn) { newValue in
                     onToggle(newValue)
                 }

@@ -2614,9 +2614,6 @@
     "Connected" : {
 
     },
-    "Connected • Stable" : {
-
-    },
     "Could not create zip file for generated logs." : {
       "extractionState" : "manual",
       "localizations" : {

@@ -42,19 +42,9 @@ enum HeliPortUI {
     }
 
     enum Dashboard {
-        static let width: CGFloat = 320
-        static let height: CGFloat = 260
-        static let iconSize: CGFloat = 42
-        
-        static let premiumGradient = LinearGradient(
-            colors: [
-                SwiftUI.Color.accentColor.opacity(0.12),
-                SwiftUI.Color.accentColor.opacity(0.04),
-                SwiftUI.Color.clear
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        static let width: CGFloat = 300
+        static let height: CGFloat = 230
+        static let iconSize: CGFloat = 40
     }
 }
 
@@ -70,6 +60,24 @@ struct ModernMenuStyle: ViewModifier {
 extension View {
     func modernMenuItem() -> some View {
         self.modifier(ModernMenuStyle())
+    }
+}
+
+struct VisualEffectView: NSViewRepresentable {
+    let material: NSVisualEffectView.Material
+    let blendingMode: NSVisualEffectView.BlendingMode
+    
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = .active
+        return view
+    }
+    
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
     }
 }
 
