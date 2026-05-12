@@ -1,5 +1,5 @@
 # HeliPort
-![image]([appicon_512.png](https://github.com/BIGJ42/HeliPort/blob/master/appicon_512.png))
+![image]([appicon_512.png](AppIcon_512.png))
 
 Intel WiFi Client for [itlwm](https://github.com/OpenIntelWireless/itlwm)
 
