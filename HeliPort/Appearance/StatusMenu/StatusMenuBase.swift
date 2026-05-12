@@ -502,11 +502,17 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
                 enabled = false
             }
 
-            if index < itemList.endIndex, let wifiMenuItemView = itemList[index].view as? WifiMenuItemView {
+            if index < itemList.endIndex {
                 // Reuse existing item
-                itemList[index].isHidden = hidden || !enabled
-                itemList[index].isEnabled = enabled
-                wifiMenuItemView.networkInfo = info
+                let item = itemList[index]
+                item.isHidden = hidden || !enabled
+                item.isEnabled = enabled
+
+                if let wifiMenuItemView = item.view as? WifiMenuItemView {
+                    wifiMenuItemView.networkInfo = info
+                } else if #available(macOS 11, *), let modernItem = item as? ModernNetworkMenuItem {
+                    modernItem.update(with: info)
+                }
             } else {
                 // Add new item if not enough existing ones
                 let item = self.addNetworkItem(insertAt: insertAt + index,

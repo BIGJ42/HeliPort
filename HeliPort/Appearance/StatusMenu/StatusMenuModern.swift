@@ -32,10 +32,13 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
     private lazy var otherSectionItem: NSMenuItem = {
         let item = HPMenuItem(highlightable: true)
         item.isHidden = true
-        item.view = SectionMenuItemView(title: .Modern.otherNetworks) { expand in
-            self.otherNetworkItemList.filter { $0.isEnabled }
-                                     .forEach { $0.isHidden = !expand }
+        item.view = SectionMenuItemView(title: .Modern.otherNetworks) { [weak self] expand in
+            guard let self = self else { return }
+            self.otherNetworkItemList.forEach { 
+                if $0.isEnabled { $0.isHidden = !expand }
+            }
             self.manuallyJoinItem.isHidden = !expand
+            self.update()
         }
         return item
     }()
@@ -69,12 +72,7 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
         createReportItem,
         diagnoseItem,
         hardwareInfoSeparator,
-
-        toggleLaunchItem,
-        checkUpdateItem,
-        quitSeparator,
-        aboutItem,
-        quitItem
+        toggleLaunchItem
     ]
 
     lazy var notImplementedItems: [NSMenuItem] = [
@@ -225,9 +223,8 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
                                     insertAt: insertAtOther,
                                     staInfo, hidden: !currentExpand)
             
-            // Sync expansion state for manual join item and list items
+            // Sync expansion state for manual join item
             self.manuallyJoinItem.isHidden = !currentExpand
-            self.otherNetworkItemList.forEach { $0.isHidden = !currentExpand }
             
             self.networkItemListSeparator.isHidden = self.otherSectionItem.isHidden && self.knownNetworkItemList.isEmpty
             

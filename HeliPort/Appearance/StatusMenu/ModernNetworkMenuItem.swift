@@ -65,12 +65,33 @@ struct NetworkItemView: View {
 
 // Helper for hosting in NSMenu
 class ModernNetworkMenuItem: NSMenuItem {
+    private var onSelect: () -> Void = {}
+
     init(ssid: String, signalStrength: Int, isConnected: Bool, isSecure: Bool, onSelect: @escaping () -> Void) {
-        super.init(title: ssid, action: nil, keyEquivalent: "")
+        self.onSelect = onSelect
+        super.init(title: ssid, action: #selector(itemAction), keyEquivalent: "")
+        self.target = self
+        
         let view = NetworkItemView(ssid: ssid, signalStrength: signalStrength, isConnected: isConnected, isSecure: isSecure, onSelect: onSelect)
         self.view = NSHostingView(rootView: view)
         // Adjust frame to fit menu
         self.view?.frame = NSRect(x: 0, y: 0, width: 300, height: 40)
+    }
+    
+    @objc private func itemAction() {
+        onSelect()
+    }
+
+    func update(with info: NetworkInfo, isConnected: Bool = false) {
+        self.title = info.ssid
+        let newView = NetworkItemView(
+            ssid: info.ssid,
+            signalStrength: Int(info.rssi),
+            isConnected: isConnected,
+            isSecure: info.auth.security != ITL80211_SECURITY_NONE,
+            onSelect: self.onSelect
+        )
+        (self.view as? NSHostingView<NetworkItemView>)?.rootView = newView
     }
     
     required init(coder: NSCoder) {
