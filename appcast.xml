@@ -4,12 +4,13 @@
         <title>HeliPort</title>
         <item>
             <title>2.2</title>
-            <pubDate>Tue, 12 May 2026 21:20:41 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 21:24:18 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/589d87587344ed04c23e1d3e8639632a39034469"><tt>589d875</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/576186110b2cb0ea3e336b10b37decade88d3062"><tt>5761861</tt></a> feat: add sharedUpdater helper and fix potential force-unwrapping crashes in update preferences, and update development team signing identity</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/38f4a65dadd3b23e767fe12fd5e7079f8bbb4003"><tt>38f4a65</tt></a> feat: add SNR to network dashboard with copy-to-clipboard, optimize status update frequency, and update version to 2.2</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/00f45cd24bef3262c8ce1a41613b86a0c57bb501"><tt>00f45cd</tt></a> chore: update appcast.xml [skip ci]</li>
@@ -31,7 +32,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-5761861" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="cAqH+QtWHF6nd6BB9RXBlHfDGKlUJYe/zgZWak+VbZkyl/2SnobRjNc0vVK/c3zqvlTRbsrJtGNrEA7rPC/uAw==" length="1749422"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2/HeliPort.dmg" sparkle:version="2.2-589d875" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="rtOFF9gm1F3cBclGpejpnx5wcbWGO7XLTUxnzqYt7rgfLU7sNCCiheS72H1G2A57k3jcaIUlQXyWqtTSllkfAg==" length="1749432"/>
         </item>
     </channel>
 </rss>
