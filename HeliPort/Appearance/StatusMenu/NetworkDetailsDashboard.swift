@@ -17,10 +17,10 @@ class NetworkDetailsViewModel: ObservableObject {
     @Published var channel: String = ""
     @Published var phyMode: String = ""
     @Published var bssid: String = ""
-    @Published var signalHistory: [SignalData] = (0..<30).map { i in
-        SignalData(time: Date().addingTimeInterval(Double(-i * 2)), value: Int.random(in: -70...(-60)))
+    @Published var signalHistory: [SignalData] = (0..<30).map { index in
+        SignalData(time: Date().addingTimeInterval(Double(-index * 2)), value: Int.random(in: -70...(-60)))
     }
-    
+
     func update(with info: StatusMenuBase.StationInfo) {
         self.ssid = info.ssid ?? ""
         self.ipAddress = info.ipAddr
@@ -31,7 +31,7 @@ class NetworkDetailsViewModel: ObservableObject {
         self.channel = info.channel
         self.phyMode = info.phyMode
         self.bssid = info.bssid
-        
+
         let newData = SignalData(time: Date(), value: info.rssiValue)
         signalHistory.insert(newData, at: 0)
         if signalHistory.count > 30 {
@@ -201,5 +201,3 @@ struct DetailItem: View {
         }
     }
 }
-
-
