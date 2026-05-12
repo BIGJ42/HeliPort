@@ -52,7 +52,5 @@
 	<string>https://raw.githubusercontent.com/bigj42/heliport/master/appcast.xml</string>
 	<key>SUPublicED25519Key</key>
 	<string>XjJYYLkk4dyKXzTcJwLUXZwAhxCLAH4QZv5B9fEe3QE=</string>
-	<key>SUPublicEDKey</key>
-	<string>XjJYYLkk4dyKXzTcJwLUXZwAhxCLAH4QZv5B9fEe3QE=</string>
 </dict>
 </plist>

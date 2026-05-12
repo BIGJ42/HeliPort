@@ -235,8 +235,8 @@ jobs:
             exit 1
           fi
           
-          # Trim whitespace and ensure we only have the attributes
-          SIGN_RESULT=$(echo "$RAW_SIGN_RESULT" | xargs)
+          # Trim whitespace using sed instead of xargs to preserve quotes
+          SIGN_RESULT=$(echo "$RAW_SIGN_RESULT" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
           echo "Generated signature attributes: $SIGN_RESULT"
         fi
 

@@ -25,7 +25,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-b90bdd1" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature=ZqNP+3F548QAd6Yt5/OcYUwDsoLJNt4XqvknKCkNGJ6DPx91u8Ik2mp8WdO/WCuoidi94TfT/ZDkUIySuM8+Bw== length=1746390/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-b90bdd1" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="ZqNP+3F548QAd6Yt5/OcYUwDsoLJNt4XqvknKCkNGJ6DPx91u8Ik2mp8WdO/WCuoidi94TfT/ZDkUIySuM8+Bw==" length="1746390"/>
         </item>
     </channel>
 </rss>

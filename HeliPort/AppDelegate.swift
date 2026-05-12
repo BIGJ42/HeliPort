@@ -22,6 +22,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         checkRunPath()
         checkAPI()
 
+        // Initialize Sparkle
+        _ = UpdateManager.sharedController
+
         let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         let iconProvider = StatusBarIconModern()
