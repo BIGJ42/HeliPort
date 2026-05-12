@@ -4,19 +4,20 @@
         <title>HeliPort</title>
         <item>
             <title>2.1</title>
-            <pubDate>Tue, 12 May 2026 19:24:17 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 19:26:38 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3e84a8e023005b319c44639a63f6c1b042a99315"><tt>3e84a8e</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/913e0a94d0a9250d800e27cff8c5799a2913bb4b"><tt>913e0a9</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/312e8676d2df6d74f3382c50466f9412f0e2b816"><tt>312e867</tt></a> chore: update Sparkle framework key to SUPublicED25519Key</li>
                     </ul>
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-913e0a9" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="sbXuFZU0fC0GhsT05UoXfHe3Resv1ejfsPx3Zwx3T0TEZLa6jb8wGU/OWEOdG7fvd3Y2rXWoSsH//AhD+mRvAw==" length="1746473"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1/HeliPort.dmg" sparkle:version="2.1-3e84a8e" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="eCDfSRJXOkRaT8+ztWi8bSBUJXViReocNF+3LWukqrIgUGeFSIIGghdh0m1Q0xhK48Wi3K695+kAPTJWk4XkAw==" length="1746440"/>
         </item>
     </channel>
 </rss>
