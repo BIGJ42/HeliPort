@@ -4,24 +4,20 @@
         <title>HeliPort</title>
         <item>
             <title>2.1</title>
-            <pubDate>Tue, 12 May 2026 19:18:34 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 19:26:38 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3fde03b799718406d6b23cfb9e4aa410b53551d8"><tt>3fde03b</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/0c6095509039a35ba19cd22779ec97540803ba30"><tt>0c60955</tt></a> fix: conditionally delete prereleases and update Sparkle signing to use a key file instead of environment variables</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/09c6eafb532872785332022e854a964328ff7fc8"><tt>09c6eaf</tt></a> chore: add debug logging and error validation to Sparkle appcast generation script</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b15e3ba0574fc41059d4dabe842347d13963503d"><tt>b15e3ba</tt></a> refactor: improve release note generation logic and update Sparkle signing to use environment variables</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/91185c6c7d28133efecbaa8667e5367d9f424826"><tt>91185c6</tt></a> style: reformat appcast.xml generation block in main workflow with consistent indentation</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/ad8eb9ffd24e553479a0ecac6d1786fce9ea9f27"><tt>ad8eb9f</tt></a> chore: bump project version to 2.1</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/9324562a0ed31527ee593941883f7e941e77286c"><tt>9324562</tt></a> chore: update UI styling, improve status menu item placement, and automate appcast deployment via GitHub Actions</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3e84a8e023005b319c44639a63f6c1b042a99315"><tt>3e84a8e</tt></a> chore: update appcast.xml [skip ci]</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/913e0a94d0a9250d800e27cff8c5799a2913bb4b"><tt>913e0a9</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/312e8676d2df6d74f3382c50466f9412f0e2b816"><tt>312e867</tt></a> chore: update Sparkle framework key to SUPublicED25519Key</li>
                     </ul>
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1/HeliPort.dmg" sparkle:version="2.1-3fde03b" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="jvs9s1+vrVs+7DZvTYdiCV5QmhkgQK7L5lzWqKYFBFlmrdObgan3j4Nf94r6gjpkzDhzsUVxKlf6t+nDvM23Bg==" length="1746424"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1/HeliPort.dmg" sparkle:version="2.1-3e84a8e" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="eCDfSRJXOkRaT8+ztWi8bSBUJXViReocNF+3LWukqrIgUGeFSIIGghdh0m1Q0xhK48Wi3K695+kAPTJWk4XkAw==" length="1746440"/>
         </item>
     </channel>
 </rss>
