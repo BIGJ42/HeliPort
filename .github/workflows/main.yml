@@ -161,7 +161,20 @@ jobs:
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
       run: |
         echo '### The latest updates are:' >> ReleaseNotes.md
-        git log -"$(git rev-list --count $(git rev-list -1 "$(git tag -l | grep -v 'alpha' | tail -1)")..HEAD)" --format="- %H %s" | grep -v '.git\|Merge\|yml\|CI' | sed  '/^$/d' >> ReleaseNotes.md
+        LAST_STABLE="$(git tag -l | grep -v 'alpha' | sort -V | tail -1)"
+        if [[ -z "$LAST_STABLE" ]]; then
+          COMMIT_COUNT="$(git rev-list --count HEAD)"
+          RANGE="HEAD"
+        else
+          COMMIT_COUNT="$(git rev-list --count ${LAST_STABLE}..HEAD)"
+          RANGE="${LAST_STABLE}..HEAD"
+        fi
+        if [[ $COMMIT_COUNT -gt 0 ]]; then
+          git log -"${COMMIT_COUNT}" "${RANGE}" --format="- %H %s" | grep -v '.git\|Merge\|yml\|CI' | sed  '/^$/d' >> ReleaseNotes.md
+        else
+          echo "- No new changes" >> ReleaseNotes.md
+        fi
+      shell: bash
 
     - name: Delete Old Prerelease
       if: (github.event_name == 'push' && github.ref_name == 'master') || github.event_name == 'workflow_dispatch'
@@ -187,10 +200,14 @@ jobs:
         
         # Escape XML characters in git log
         CHANGELOG=""
-        git log -"${COMMIT_COUNT}" --format="%H %h %s" | while read -r sha short_sha subject; do
-          esc_subject=$(echo "$subject" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g')
-          CHANGELOG+="${INDENT}<li><a class=\"commit-link\" href=\"${REPO_COMMIT_URL}${sha}\"><tt>${short_sha}</tt></a> ${esc_subject}</li>\n"
-        done
+        if [[ $COMMIT_COUNT -gt 0 ]]; then
+          while read -r sha short_sha subject; do
+            esc_subject=$(echo "$subject" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g')
+            CHANGELOG+="${INDENT}<li><a class=\"commit-link\" href=\"${REPO_COMMIT_URL}${sha}\"><tt>${short_sha}</tt></a> ${esc_subject}</li>\n"
+          done <<< "$(git log -"${COMMIT_COUNT}" --format="%H %h %s")"
+        else
+          CHANGELOG="${INDENT}<li>No new changes</li>\n"
+        fi
 
         SPARKLE_BIN='./build/SourcePackages/artifacts/sparkle/Sparkle/bin'
         PUBDATE="$(date +"%a, %d %b %Y %T %z")"
@@ -200,7 +217,8 @@ jobs:
 
         SIGN_RESULT=""
         if [[ -n "${SPARKLE_KEY}" ]]; then
-          SIGN_RESULT="$($SPARKLE_BIN/sign_update -s ${SPARKLE_KEY} ./Artifacts/HeliPort.dmg)"
+          export SUPrivateED25519Key="${SPARKLE_KEY}"
+          SIGN_RESULT="$($SPARKLE_BIN/sign_update ./Artifacts/HeliPort.dmg)"
         fi
 
         cat <<EOF > ./Artifacts/appcast.xml
