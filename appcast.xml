@@ -4,12 +4,14 @@
         <title>HeliPort</title>
         <item>
             <title>2.1</title>
-            <pubDate>Tue, 12 May 2026 19:58:41 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 20:37:37 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3158e009ac8b5a925aa3c809c23ce5d2e8189755"><tt>3158e00</tt></a> feat: initialize Sparkle, clean up Info.plist, fix XML syntax, and update signature trimming in CI</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/531f1704453ea5748b6a665ff2e135783e88341f"><tt>531f170</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b90bdd18bc5a1c7df36d557e5c58dc23e1184376"><tt>b90bdd1</tt></a> chore: fix indentation of generated appcast.xml in main workflow</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/8ca4f782d068bb158118384a66a70ef3650a5313"><tt>8ca4f78</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/84897b120bc3f67ba1475e8e35f8e5b7d89ea68d"><tt>84897b1</tt></a> fix: update Sparkle signing logic to trim whitespace and synchronize Info.plist feed URL and keys</li>
@@ -25,7 +27,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-b90bdd1" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="ZqNP+3F548QAd6Yt5/OcYUwDsoLJNt4XqvknKCkNGJ6DPx91u8Ik2mp8WdO/WCuoidi94TfT/ZDkUIySuM8+Bw==" length="1746390"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.1-alpha/HeliPort.dmg" sparkle:version="2.1-3158e00" sparkle:shortVersionString="2.1" type="application/octet-stream" sparkle:edSignature="W//Q9TpIcA2tfvs2Sc1r6ilviThG+OGeKmUgMHobpzwOCLX2nenu5WX7M7wdDsF/8YfnlSyvAgnvbmusOzB0Bg==" length="1746477"/>
         </item>
     </channel>
 </rss>
