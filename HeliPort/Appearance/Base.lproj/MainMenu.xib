@@ -14,6 +14,5 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="HeliPort" customModuleProvider="target"/>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
-        <customObject id="BIe-Qt-wTP" customClass="SUUpdater"/>
     </objects>
 </document>
