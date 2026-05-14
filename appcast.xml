@@ -4,12 +4,14 @@
         <title>HeliPort</title>
         <item>
             <title>2.2</title>
-            <pubDate>Thu, 14 May 2026 13:34:27 +0000</pubDate>
+            <pubDate>Thu, 14 May 2026 21:15:29 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/5dba5aa42c25cc0b2a62f9434e51c86bc4a9ca22"><tt>5dba5aa</tt></a> Add GitHub Actions workflow for Jekyll deployment</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/5de1268e7264f83394988c45c95ab5d36da67aea"><tt>5de1268</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/06f6fb315d0eb5cbbfec0ae627b37b0ce103d5a3"><tt>06f6fb3</tt></a> ci: trigger CI to test Sparkle signing with SPARKLE_KEY secret</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b40446e4d6147e8915c8b3a89e6f47983e2866b1"><tt>b40446e</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/cfdbd39e152765fd30284ff1913ab48a3f965167"><tt>cfdbd39</tt></a> refactor: move SparkleDelegate implementation to UpdateManager and remove UI-based updater reference</li>
@@ -18,7 +20,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-06f6fb3" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="PK1m2O1TXvUPzbopClVlHDtoIpxtO9UNqKKwIJ/XdvDft5fiFsChgv6K0ppTvQLJjs+TEHlOEvhA6mUnc8WpDw==" length="1771221"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-5dba5aa" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="tDi53Cc8YwRlOKxQq8lxfqHxrAb4VtdEzyy9iDR/iqokEhVaNp77DSGaaBbG48bQrBqyLPHpMV8N80AOyf4uDA==" length="1771270"/>
         </item>
     </channel>
 </rss>
