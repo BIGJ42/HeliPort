@@ -4,35 +4,19 @@
         <title>HeliPort</title>
         <item>
             <title>2.2</title>
-            <pubDate>Tue, 12 May 2026 21:24:18 +0000</pubDate>
+            <pubDate>Thu, 14 May 2026 13:06:02 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/589d87587344ed04c23e1d3e8639632a39034469"><tt>589d875</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/576186110b2cb0ea3e336b10b37decade88d3062"><tt>5761861</tt></a> feat: add sharedUpdater helper and fix potential force-unwrapping crashes in update preferences, and update development team signing identity</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/38f4a65dadd3b23e767fe12fd5e7079f8bbb4003"><tt>38f4a65</tt></a> feat: add SNR to network dashboard with copy-to-clipboard, optimize status update frequency, and update version to 2.2</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/00f45cd24bef3262c8ce1a41613b86a0c57bb501"><tt>00f45cd</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/0543f646bca376e3d469c7dadf52c15a6ff42d3e"><tt>0543f64</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3158e009ac8b5a925aa3c809c23ce5d2e8189755"><tt>3158e00</tt></a> feat: initialize Sparkle, clean up Info.plist, fix XML syntax, and update signature trimming in CI</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/531f1704453ea5748b6a665ff2e135783e88341f"><tt>531f170</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b90bdd18bc5a1c7df36d557e5c58dc23e1184376"><tt>b90bdd1</tt></a> chore: fix indentation of generated appcast.xml in main workflow</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/8ca4f782d068bb158118384a66a70ef3650a5313"><tt>8ca4f78</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/84897b120bc3f67ba1475e8e35f8e5b7d89ea68d"><tt>84897b1</tt></a> fix: update Sparkle signing logic to trim whitespace and synchronize Info.plist feed URL and keys</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3e3977a5ce504425feddd1ec786a8a11d9d04670"><tt>3e3977a</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/64a4ef1236b53939a0f1e6f81fdbcc306c73d7e6"><tt>64a4ef1</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/d4685388815990d3d66f76353272e274a05cf590"><tt>d468538</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/ad03cea861c9f73d0221b307c08bdb91fbc057a0"><tt>ad03cea</tt></a> chore: update Sparkle public ED25519 key in Info.plist</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/4740143dda9d7694a382659783b46ec349672f86"><tt>4740143</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/3e84a8e023005b319c44639a63f6c1b042a99315"><tt>3e84a8e</tt></a> chore: update appcast.xml [skip ci]</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/913e0a94d0a9250d800e27cff8c5799a2913bb4b"><tt>913e0a9</tt></a> Merge branch &apos;master&apos; of https://github.com/bigj42/heliport</li>
-                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/312e8676d2df6d74f3382c50466f9412f0e2b816"><tt>312e867</tt></a> chore: update Sparkle framework key to SUPublicED25519Key</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/cfdbd39e152765fd30284ff1913ab48a3f965167"><tt>cfdbd39</tt></a> refactor: move SparkleDelegate implementation to UpdateManager and remove UI-based updater reference</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/7aba04e74cb1ea6d3a65bbf8925899dd951b0306"><tt>7aba04e</tt></a> feat: implement SparkleDelegate for update lifecycle logging and fix code signing configuration in CI workflows</li>
                     </ul>
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2/HeliPort.dmg" sparkle:version="2.2-589d875" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="rtOFF9gm1F3cBclGpejpnx5wcbWGO7XLTUxnzqYt7rgfLU7sNCCiheS72H1G2A57k3jcaIUlQXyWqtTSllkfAg==" length="1749432"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-cfdbd39" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="4PtK2HHWKablsEoclPLY6dyLhATvr1K/VE6K6c1Xx2CKluGdDct+P/0pFf8ATsQpuzixc02FNqIfe3sJTxA4Cg==" length="1771234"/>
         </item>
     </channel>
 </rss>
