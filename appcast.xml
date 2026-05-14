@@ -4,19 +4,21 @@
         <title>HeliPort</title>
         <item>
             <title>2.2</title>
-            <pubDate>Thu, 14 May 2026 13:06:02 +0000</pubDate>
+            <pubDate>Thu, 14 May 2026 13:34:27 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/06f6fb315d0eb5cbbfec0ae627b37b0ce103d5a3"><tt>06f6fb3</tt></a> ci: trigger CI to test Sparkle signing with SPARKLE_KEY secret</li>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/b40446e4d6147e8915c8b3a89e6f47983e2866b1"><tt>b40446e</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/cfdbd39e152765fd30284ff1913ab48a3f965167"><tt>cfdbd39</tt></a> refactor: move SparkleDelegate implementation to UpdateManager and remove UI-based updater reference</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/7aba04e74cb1ea6d3a65bbf8925899dd951b0306"><tt>7aba04e</tt></a> feat: implement SparkleDelegate for update lifecycle logging and fix code signing configuration in CI workflows</li>
                     </ul>
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-cfdbd39" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="4PtK2HHWKablsEoclPLY6dyLhATvr1K/VE6K6c1Xx2CKluGdDct+P/0pFf8ATsQpuzixc02FNqIfe3sJTxA4Cg==" length="1771234"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.2-alpha/HeliPort.dmg" sparkle:version="2.2-06f6fb3" sparkle:shortVersionString="2.2" type="application/octet-stream" sparkle:edSignature="PK1m2O1TXvUPzbopClVlHDtoIpxtO9UNqKKwIJ/XdvDft5fiFsChgv6K0ppTvQLJjs+TEHlOEvhA6mUnc8WpDw==" length="1771221"/>
         </item>
     </channel>
 </rss>
