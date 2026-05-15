@@ -4,12 +4,13 @@
         <title>HeliPort</title>
         <item>
             <title>2.3</title>
-            <pubDate>Fri, 15 May 2026 12:24:54 +0000</pubDate>
+            <pubDate>Fri, 15 May 2026 12:28:22 +0000</pubDate>
             <description><![CDATA[
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/19.4.0/primer.min.css"><meta charset="UTF-8">
                 <div class="markdown-body">
                     <h3>The latest updates are:</h3>
                     <ul>
+                    <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/a4d8aff6ff89084a9a29420408f4c5bb57919463"><tt>a4d8aff</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/c5ce8a2f6401aff75d3acd80d0bae40a2c85a7c9"><tt>c5ce8a2</tt></a> refactor: update check for updates menu item icon and trigger update manager directly</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/c715deafa1a0fc02dda21a408c656227148725a6"><tt>c715dea</tt></a> chore: update appcast.xml [skip ci]</li>
                     <li><a class="commit-link" href="https://github.com/bigj42/heliport/commit/0589ac1f3e1f3bb0c1c33d1c3e50d581dc7a76ca"><tt>0589ac1</tt></a> refactor: redesign status menu using Modern UI components, update scanning intervals, and optimize network list layout.</li>
@@ -24,7 +25,7 @@
                 </div>
             ]]></description>
             <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.3-alpha/HeliPort.dmg" sparkle:version="2.3-c5ce8a2" sparkle:shortVersionString="2.3" type="application/octet-stream" sparkle:edSignature="Ev7QL4NFFw2wzIok9wDaI6ThbEB2tuu8pohGYqHW9wsE7BvFV0aLGAg2SO99i6dFIjNJ/KyGFzcM7QwAHtkbBQ==" length="1804934"/>
+            <enclosure url="https://github.com/bigj42/heliport/releases/download/v2.3/HeliPort.dmg" sparkle:version="2.3-a4d8aff" sparkle:shortVersionString="2.3" type="application/octet-stream" sparkle:edSignature="CMR/u1ITDtmsdUYSrbLmR9YW3JTemSxk7TQY5Aoo7ZyYP9ylcRpXT0tLtbt7/9LRMVMfb2DIrdHKW6PqEe34Ag==" length="1804934"/>
         </item>
     </channel>
 </rss>
