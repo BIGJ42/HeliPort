@@ -174,8 +174,8 @@ final class StatusMenuModern: StatusMenuBase, StatusMenuItems {
             self?.clickMenuItem(self?.aboutItem ?? NSMenuItem())
         })
         
-        addItem(ModernActionMenuItem(title: String.checkUpdates, icon: "arrow.clockwise.circle") { [weak self] in
-            self?.clickMenuItem(self?.checkUpdateItem ?? NSMenuItem())
+        addItem(ModernActionMenuItem(title: String.checkUpdates, icon: "arrow.triangle.2.circlepath") {
+            UpdateManager.sharedController?.checkForUpdates(nil)
         })
         
         addItem(quitSeparator)
