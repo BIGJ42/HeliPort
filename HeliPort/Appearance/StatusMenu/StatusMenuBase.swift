@@ -32,8 +32,8 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
 
     // - MARK: Properties
 
-    private let networkListUpdatePeriod: Double = 5
-    private let statusUpdatePeriod: Double = 2
+    private let networkListUpdatePeriod: Double = 3
+    private let statusUpdatePeriod: Double = 1
 
     var headerLength: Int = 0
     private var networkListUpdateTimer: Timer?
@@ -576,7 +576,7 @@ class StatusMenuBase: NSMenu, NSMenuDelegate {
 
 // MARK: Localized Strings
 
-private extension String {
+extension String {
     static let notImplemented = NSLocalizedString("FUNCTION NOT IMPLEMENTED")
     static let unknown = NSLocalizedString("Unknown")
     static let unavailable = NSLocalizedString("Unavailable")

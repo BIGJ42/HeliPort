@@ -14,6 +14,7 @@
  */
 
 import Cocoa
+import SwiftUI
 
 class PrefsWindow: NSWindow {
 
@@ -47,6 +48,7 @@ class PrefsWindow: NSWindow {
         toolbar!.displayMode = .iconAndLabel
         toolbar!.insertItem(withItemIdentifier: .general, at: 0)
         toolbar!.insertItem(withItemIdentifier: .networks, at: 1)
+        toolbar!.insertItem(withItemIdentifier: .debug, at: 2)
         toolbar!.selectedItemIdentifier = .general
 
         if #available(OSX 11.0, *) {
@@ -88,6 +90,14 @@ class PrefsWindow: NSWindow {
         case .general:
             newView = PrefsGeneralView()
             size = newView!.fittingSize
+        case .debug:
+            if #available(macOS 11.0, *) {
+                newView = NSHostingView(rootView: PrefsDebugView())
+                size = NSSize(width: 480, height: 320)
+            } else {
+                Log.error("Debug view requires macOS 11.0+")
+                return
+            }
         default:
             Log.error("Toolbar Item not implemented: \(identifier)")
         }
@@ -106,15 +116,15 @@ class PrefsWindow: NSWindow {
 extension PrefsWindow: NSToolbarDelegate {
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.general, .networks]
+        return [.general, .networks, .debug]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.general, .networks]
+        return [.general, .networks, .debug]
     }
 
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.general, .networks]
+        return [.general, .networks, .debug]
     }
 
     func toolbar(_ toolbar: NSToolbar,
@@ -146,6 +156,16 @@ extension PrefsWindow: NSToolbarDelegate {
             }
             toolbarItem.isEnabled = true
             return toolbarItem
+        case .debug:
+            toolbarItem.label = .debug
+            toolbarItem.paletteLabel = .debug
+            if #available(OSX 11.0, *) {
+                toolbarItem.image = NSImage(systemSymbolName: "ant.fill", accessibilityDescription: .debug)
+            } else {
+                toolbarItem.image = NSImage(named: NSImage.cautionName)
+            }
+            toolbarItem.isEnabled = true
+            return toolbarItem
         default:
             return nil
         }
@@ -157,6 +177,7 @@ extension PrefsWindow: NSToolbarDelegate {
 private extension NSToolbarItem.Identifier {
     static let networks = NSToolbarItem.Identifier("WiFiNetworks")
     static let general = NSToolbarItem.Identifier("General")
+    static let debug = NSToolbarItem.Identifier("Debug")
     static let none = NSToolbarItem.Identifier("none")
 }
 
@@ -166,4 +187,109 @@ private extension String {
     static let networkPrefs = NSLocalizedString("Network Preferences")
     static let networks = NSLocalizedString("Networks")
     static let general = NSLocalizedString("General")
+    static let debug = NSLocalizedString("Debug")
+}
+
+// MARK: - PrefsDebugView
+
+struct PrefsDebugView: View {
+    @State private var isGeneratingReport = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("Diagnostics & Debugging")
+                .font(.headline)
+            
+            Text("Use these tools to troubleshoot connection issues or generate information for bug reports.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            Divider()
+            
+            VStack(spacing: 12) {
+                DebugActionButton(
+                    title: "Enable Wi-Fi Logging",
+                    icon: "terminal",
+                    description: "Captures detailed driver and firmware logs."
+                ) {
+                    // Not implemented in driver yet according to StatusMenuLegacy
+                }
+                .disabled(true)
+                
+                DebugActionButton(
+                    title: "Create Diagnostics Report",
+                    icon: "doc.text.fill",
+                    description: "Generates a comprehensive system report for debugging.",
+                    isLoading: isGeneratingReport
+                ) {
+                    isGeneratingReport = true
+                    DispatchQueue.global(qos: .background).async {
+                        BugReporter.generateBugReport()
+                        DispatchQueue.main.async {
+                            isGeneratingReport = false
+                        }
+                    }
+                }
+                
+                DebugActionButton(
+                    title: "Open Wireless Diagnostics",
+                    icon: "stethoscope",
+                    description: "Opens the native macOS Wireless Diagnostics tool."
+                ) {
+                    NSWorkspace.shared.launchApplication("Wireless Diagnostics")
+                }
+            }
+            
+            Spacer()
+        }
+        .padding(30)
+        .frame(width: 480, height: 320)
+    }
+}
+
+struct DebugActionButton: View {
+    let title: String
+    let icon: String
+    let description: String
+    var isLoading: Bool = false
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.accentColor.opacity(0.1))
+                        .frame(width: 40, height: 40)
+                    
+                    if isLoading {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    } else {
+                        Image(systemName: icon)
+                            .font(.system(size: 18))
+                            .foregroundColor(.accentColor)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 13, weight: .semibold))
+                    Text(description)
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.secondary.opacity(0.3))
+            }
+            .padding(10)
+            .background(Color.primary.opacity(0.03))
+            .cornerRadius(10)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
 }

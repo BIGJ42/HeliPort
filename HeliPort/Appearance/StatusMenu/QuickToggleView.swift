@@ -8,12 +8,12 @@ struct QuickToggleView: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundColor(.primary)
             Spacer()
             Toggle("", isOn: $isOn)
                 .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                 .labelsHidden()
-                .scaleEffect(0.8)
                 .onChange(of: isOn) { newValue in
                     onToggle(newValue)
                 }
@@ -27,7 +27,7 @@ class ModernToggleMenuItem: NSMenuItem {
         super.init(title: title, action: nil, keyEquivalent: "")
         let view = QuickToggleView(isOn: isOn, title: title, onToggle: onToggle)
         self.view = NSHostingView(rootView: view)
-        self.view?.frame = NSRect(x: 0, y: 0, width: 300, height: 44)
+        self.view?.frame = NSRect(x: 0, y: 0, width: HeliPortUI.Dashboard.width, height: 44)
     }
     
     required init(coder: NSCoder) {

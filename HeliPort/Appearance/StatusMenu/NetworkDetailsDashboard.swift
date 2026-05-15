@@ -63,65 +63,61 @@ struct NetworkDetailsDashboard: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header
-            HStack(spacing: 10) {
+            HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(signalColor.opacity(0.12))
-                        .frame(width: 34, height: 34)
+                        .fill(signalColor.opacity(0.15))
+                        .frame(width: 36, height: 36)
                     Image(systemName: "wifi", variableValue: Double(max(0, viewModel.signal + 100)) / 100.0)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 14, weight: .bold))
                         .foregroundColor(signalColor)
                 }
                 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(viewModel.ssid)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                     
                     HStack(spacing: 4) {
                         Circle()
                             .fill(signalColor)
-                            .frame(width: 5, height: 5)
+                            .frame(width: 6, height: 6)
                         Text("Connected")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(signalColor.opacity(0.9))
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(signalColor.opacity(0.8))
                     }
                 }
                 
                 Spacer()
                 
                 // Tx Rate Badge
-                VStack(alignment: .trailing, spacing: -1) {
+                VStack(alignment: .trailing, spacing: -2) {
                     Text(viewModel.txRate.replacingOccurrences(of: " Mbps", with: ""))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(.system(size: 22, weight: .black, design: .rounded))
                         .foregroundColor(.primary)
                     Text("Mbps")
-                        .font(.system(size: 7, weight: .heavy))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 8, weight: .black))
+                        .foregroundColor(.secondary.opacity(0.8))
                         .tracking(0.5)
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(.regularMaterial)
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.5)
-                )
+                .padding(.vertical, 6)
+                .background(Color.primary.opacity(0.05))
+                .cornerRadius(10)
             }
-            .padding(.bottom, 12)
+            .padding(.bottom, 14)
             
             // Signal Chart
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text("SIGNAL STRENGTH")
-                        .font(.system(size: 8, weight: .heavy))
-                        .foregroundColor(.secondary.opacity(0.7))
+                        .font(.system(size: 9, weight: .black))
+                        .foregroundColor(.secondary.opacity(0.6))
                         .tracking(0.8)
                     Spacer()
                     Text(signalDisplay)
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .foregroundColor(signalColor)
                 }
                 
@@ -133,34 +129,34 @@ struct NetworkDetailsDashboard: View {
                         )
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [signalColor.opacity(0.25), signalColor.opacity(0.0)],
+                                colors: [signalColor.opacity(0.3), signalColor.opacity(0.0)],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
                         )
-                        .interpolationMethod(.catmullRom)
+                        .interpolationMethod(.monotone)
                         
                         LineMark(
                             x: .value("Time", data.time),
                             y: .value("Signal", data.value)
                         )
-                        .foregroundStyle(signalColor.opacity(0.9))
-                        .lineStyle(StrokeStyle(lineWidth: 1.5, lineCap: .round))
-                        .interpolationMethod(.catmullRom)
+                        .foregroundStyle(signalColor.opacity(0.8))
+                        .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round))
+                        .interpolationMethod(.monotone)
                     }
                 }
                 .chartYScale(domain: -90...(-30))
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
-                .frame(height: 32)
+                .frame(height: 36)
             }
-            .padding(.bottom, 12)
+            .padding(.bottom, 16)
             
-            Divider().opacity(0.15)
-                .padding(.bottom, 10)
+            Divider().opacity(0.1)
+                .padding(.bottom, 14)
             
             // Details Grid
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                 DetailItem(label: "IP Address", value: viewModel.ipAddress, icon: "network")
                 DetailItem(label: "Router", value: viewModel.router, icon: "router")
                 DetailItem(label: "Channel", value: viewModel.channel, icon: "antenna.radiowaves.left.and.right")
@@ -170,15 +166,15 @@ struct NetworkDetailsDashboard: View {
                 DetailItem(label: "SNR", value: "\(viewModel.snr) dB", icon: "equal.circle")
             }
         }
-        .padding(14)
-        .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous))
+        .padding(16)
+        .background(Color.primary.opacity(0.03))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: HeliPortUI.Radius.medium, style: .continuous)
-                .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.primary.opacity(0.08), lineWidth: 0.5)
         )
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
     }
 }
 
@@ -188,19 +184,23 @@ struct DetailItem: View {
     let icon: String
     
     var body: some View {
-        HStack(alignment: .center, spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 9, weight: .semibold))
-                .foregroundColor(.accentColor.opacity(0.7))
-                .frame(width: 12)
+        HStack(alignment: .center, spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(Color.accentColor.opacity(0.1))
+                    .frame(width: 20, height: 20)
+                Image(systemName: icon)
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.accentColor)
+            }
             
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text(label.uppercased())
-                    .font(.system(size: 7, weight: .heavy))
-                    .foregroundColor(.secondary.opacity(0.55))
+                    .font(.system(size: 7.5, weight: .black))
+                    .foregroundColor(.secondary.opacity(0.5))
                     .tracking(0.6)
                 Text(value)
-                    .font(.system(size: 10.5, weight: .semibold, design: .rounded))
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -211,10 +211,6 @@ struct DetailItem: View {
         .onTapGesture {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(value, forType: .string)
-            
-            // Simple visual feedback could be added here if needed, 
-            // but for lightweight apps, a silent copy is often preferred 
-            // or a small haptic if available.
         }
     }
 }

@@ -20,6 +20,7 @@ public extension String {
         static let legacyUI = "legacyUIEnabled"
         static let showBitrateInMenuBar = "showBitrateInMenuBar"
         static let showSignalAsPercentage = "showSignalAsPercentage"
+        static let hasPromptedForLaunchAtLogin = "hasPromptedForLaunchAtLogin"
     }
 
     init<T>(ssid: T) {

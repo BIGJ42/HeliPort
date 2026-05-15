@@ -37,6 +37,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         _ = StatusBarIcon.shared(statusBar: statusBar, icons: iconProvider)
 
         statusBar.menu = StatusMenuModern()
+        
+        promptForLaunchAtLogin()
     }
 
     private var drv_info = ioctl_driver_info()
@@ -93,6 +95,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if alert.show() == .alertSecondButtonReturn {
             NSApp.terminate(nil)
+        }
+    }
+
+    private func promptForLaunchAtLogin() {
+        guard !UserDefaults.standard.bool(forKey: .DefaultsKey.hasPromptedForLaunchAtLogin) else {
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            let alert = NSAlert()
+            alert.messageText = NSLocalizedString("Launch HeliPort at Login?")
+            alert.informativeText = NSLocalizedString("Would you like HeliPort to start automatically when you log in to your Mac?")
+            alert.addButton(withTitle: NSLocalizedString("Enable"))
+            alert.addButton(withTitle: NSLocalizedString("Not Now"))
+            alert.alertStyle = .informational
+
+            if alert.runModal() == .alertFirstButtonReturn {
+                LoginItemManager.setStatus(enabled: true)
+                Log.debug("User enabled Launch at Login via first-run prompt")
+            }
+
+            UserDefaults.standard.set(true, forKey: .DefaultsKey.hasPromptedForLaunchAtLogin)
         }
     }
 

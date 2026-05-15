@@ -53,6 +53,15 @@ struct NetworkItemView: View {
         .onTapGesture {
             onSelect()
         }
+        .contextMenu {
+            Button("Forget Network") {
+                CredentialsManager.instance.remove(NetworkInfo(ssid: ssid))
+            }
+            Button("Copy SSID") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(ssid, forType: .string)
+            }
+        }
     }
     
     private var signalIconName: String {

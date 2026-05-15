@@ -2614,6 +2614,9 @@
     "Connected" : {
 
     },
+    "Copy SSID" : {
+
+    },
     "Could not create zip file for generated logs." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2943,6 +2946,9 @@
           }
         }
       }
+    },
+    "Diagnostics & Debugging" : {
+
     },
     "Disconnect from " : {
       "extractionState" : "manual",
@@ -3753,6 +3759,9 @@
           }
         }
       }
+    },
+    "Forget Network" : {
+
     },
     "FUNCTION NOT IMPLEMENTED" : {
       "extractionState" : "manual",
@@ -7861,6 +7870,9 @@
           }
         }
       }
+    },
+    "Use these tools to troubleshoot connection issues or generate information for bug reports." : {
+
     },
     "Username:" : {
       "extractionState" : "manual",

@@ -60,6 +60,15 @@ class PrefsGeneralView: NSView {
         return checkbox
     }()
 
+    lazy var launchAtLoginCheckbox: NSButton = {
+        let checkbox = NSButton(checkboxWithTitle: .launchLogin,
+                                target: self,
+                                action: #selector(checkboxChanged(_:)))
+        checkbox.identifier = .launchAtLoginId
+        checkbox.state = LoginItemManager.isEnabled() ? .on : .off
+        return checkbox
+    }()
+
 
 
 
@@ -84,6 +93,7 @@ class PrefsGeneralView: NSView {
         extrasLabel.alignment = .right
         gridView.addRow(with: [extrasLabel, bitrateCheckbox])
         gridView.addRow(with: [NSView(), signalPercentageCheckbox])
+        gridView.addRow(with: [NSView(), launchAtLoginCheckbox])
 
         addSubview(gridView)
         setupConstraints()
@@ -119,6 +129,8 @@ extension PrefsGeneralView {
             // Notify StatusBarIcon to update immediately if possible
         case .signalPercentageId:
             UserDefaults.standard.set(sender.state == .on, forKey: .DefaultsKey.showSignalAsPercentage)
+        case .launchAtLoginId:
+            LoginItemManager.setStatus(enabled: sender.state == .on)
 
         default:
             break
@@ -131,6 +143,7 @@ private extension NSUserInterfaceItemIdentifier {
     static let autoDownloadId = NSUserInterfaceItemIdentifier(rawValue: "AutoDownloadCheckbox")
     static let bitrateId = NSUserInterfaceItemIdentifier(rawValue: "BitrateCheckbox")
     static let signalPercentageId = NSUserInterfaceItemIdentifier(rawValue: "SignalPercentageCheckbox")
+    static let launchAtLoginId = NSUserInterfaceItemIdentifier(rawValue: "LaunchAtLoginCheckbox")
 
 
 }
